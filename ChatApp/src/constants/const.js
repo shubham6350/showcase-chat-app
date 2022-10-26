@@ -21,8 +21,3 @@ export const COMETCHAT_CONSTANTS = {
     REGION: '',
     AUTH_KEY: '',
 };
-
-export const COLORS = {
-    MAIN_PRIMARY: '#246BFD',
-    MAIN_SECONDARY: '#FFD300',
-}
