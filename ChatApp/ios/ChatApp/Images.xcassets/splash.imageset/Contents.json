@@ -1,14 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "GroupDFGD.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "GroupDFGD-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "GroupDFGD-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

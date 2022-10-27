@@ -1,16 +1,21 @@
-import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Text, TextInput, View } from 'react-native';
 
-export class App extends Component {
-  render() {
-    return (
-      <>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Welcome To ChatApp!</Text>
-        </View>
-      </>
-    );
-  }
-}
+import SplashScreen from 'react-native-splash-screen';
+
+const App = () => {
+  useEffect(() => {
+    SplashScreen.hide();
+  });
+
+  return (
+    <>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {/* <Splash_Screen /> */}
+        <Text>Welcome to ChatApp!</Text>
+      </View>
+    </>
+  );
+};
 
 export default App;
