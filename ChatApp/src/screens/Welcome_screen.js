@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 const Welcome_screen = () => {
   return (
     <View>
-      <Text> textInComponent </Text>
+      <Text> textInC </Text>
     </View>
   );
 };
