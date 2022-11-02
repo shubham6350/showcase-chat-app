@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { Text, TextInput, View } from 'react-native';
-import WelcomeUI from './src/screens/WelcomeUI';
-
+import StackNavigator from './src/navigation/StackNavigator';
 import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
@@ -11,11 +9,7 @@ const App = () => {
 
   return (
     <>
-      {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}> */}
-        {/* <Splash_Screen /> */}
-        {/* <Text>Welcome to ChatApp!</Text> */}
-      {/* </View> */}
-      <WelcomeUI />
+      <StackNavigator />
     </>
   );
 };

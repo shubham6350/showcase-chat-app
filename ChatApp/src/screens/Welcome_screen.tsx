@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 const Welcome_screen = () => {
   return (
-    <View>
-      <Text> textInComponent </Text>
-    </View>
+    <>
+      <View></View>
+    </>
   );
 };
 

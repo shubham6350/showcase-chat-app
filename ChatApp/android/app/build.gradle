@@ -257,6 +257,9 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation project(':react-native-vector-icons')
+    implementation 'com.facebook.android:facebook-android-sdk:9.3.0'
+
+    
 
     //noinspection GradleDynamicVersion
 
