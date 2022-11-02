@@ -4,6 +4,7 @@ import Button1 from "../../../components/buttons/button1";
 import { useNavigation } from '@react-navigation/native';
 import { useRoute } from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import AntIcon from "react-native-vector-icons/AntDesign";
 import { LogBox } from 'react-native';
 
 const VLotp = () => {
@@ -100,7 +101,7 @@ const VLotp = () => {
         <SafeAreaView style={{flex: 1,backgroundColor: '#fff'}}>
             <View style={{flex: 1,padding: 24}}>
             <View>
-                <Text style={{fontFamily: 'Urbanist-Bold', fontSize: 24,color: '#000'}}>OTP Code Verification</Text> 
+                <Text style={{fontFamily: 'Urbanist-Bold', fontSize: 24,color: '#000'}}><AntIcon name="arrowleft" color="black" size={20} />  OTP Code Verification</Text> 
             </View>
             <View style={{flex: 1,alignItems: 'center', justifyContent: 'center'}}>
             <View>

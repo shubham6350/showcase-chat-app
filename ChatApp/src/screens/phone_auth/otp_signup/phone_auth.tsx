@@ -5,6 +5,7 @@ import styles from "./styles";
 import Button1 from "../../../components/buttons/button1";
 import CheckBox1 from "../../../components/checkboxes/checkbox1";
 import auth from '@react-native-firebase/auth';
+import AntIcon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
 
 const PSAuth = () => {
@@ -38,7 +39,7 @@ const PSAuth = () => {
          >
             <View style={styles.container1}>
             <View style={{flex: 1}}>
-            <Text>Back Button</Text> 
+            <AntIcon name="arrowleft" color="black" size={20} />
             </View>
             <View style={styles.logoc}>
             <Image style={styles.simage} source={require('../../../../assets/images/image21.png')} />
