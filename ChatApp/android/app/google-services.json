@@ -30,6 +30,13 @@
             {
               "client_id": "993010448494-junrsuvh8tq7g3ena1edbb8lnj43e0h5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "993010448494-mt1jprmhk937vg0v7mijv8n05dphjft4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.ChatApp"
+              }
             }
           ]
         }

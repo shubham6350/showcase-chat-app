@@ -3,6 +3,7 @@ import { Text, TextInput, View } from 'react-native';
 import WelcomeUI from './src/screens/WelcomeUI';
 
 import SplashScreen from 'react-native-splash-screen';
+import StackNavigator from './StackNavigation';
 
 const App = () => {
   useEffect(() => {
@@ -15,7 +16,8 @@ const App = () => {
         {/* <Splash_Screen /> */}
         {/* <Text>Welcome to ChatApp!</Text> */}
       {/* </View> */}
-      <WelcomeUI />
+      {/* <WelcomeUI /> */}
+      <StackNavigator />
     </>
   );
 };
