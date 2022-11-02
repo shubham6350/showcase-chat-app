@@ -45,6 +45,12 @@ const VSotp = () => {
     async function signInWithPhoneNumber(phoneNumber: string) {
       const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
       setConfirmm(confirmation);
+      setText1('');
+      setText2('');
+      setText3('');
+      setText4('');
+      setText5('');
+      setText6('');
     }
 
     const onChangeText1 = (text: string) => {
@@ -83,8 +89,10 @@ const VSotp = () => {
             console.log('login success')
           )
           console.log(data);
+          Alert.alert('login success');
         } catch (error) {
-          console.log('Invalid code.');
+          console.log('Invalid code');
+          Alert.alert('Invalid code');
         }
     }
     return (
@@ -99,11 +107,11 @@ const VSotp = () => {
                 <Text style={{fontFamily: 'Urbanist-Medium', fontSize: 18,marginBottom: 60,color: '#000'}}>Code has been sent to {uphone}</Text>
             </View>
             <View style={{flexDirection: 'row'}}>
-                <TextInput placeholder="0" value={text1} onChangeText={onChangeText1} keyboardType="number-pad" maxLength={1} onChange={() => ref_input2.current.focus()} style={{textAlign: 'center',paddingVertical: 10,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
-                <TextInput placeholder="0" value={text2} onChangeText={onChangeText2} ref={ref_input2} onChange={() => ref_input3.current.focus()} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
-                <TextInput placeholder="0" value={text3} onChangeText={onChangeText3} ref={ref_input3} onChange={() => ref_input4.current.focus()} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
-                <TextInput placeholder="0" value={text4} onChangeText={onChangeText4} ref={ref_input4} onChange={() => ref_input5.current.focus()} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
-                <TextInput placeholder="0" value={text5} onChangeText={onChangeText5} ref={ref_input5} onChange={() => ref_input6.current.focus()} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
+                <TextInput placeholder="0" value={text1} onChangeText={onChangeText1} keyboardType="number-pad" maxLength={1} onChange={() => {text1.length != 0 ? '' : ref_input2.current.focus()}} style={{textAlign: 'center',paddingVertical: 10,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
+                <TextInput placeholder="0" value={text2} onChangeText={onChangeText2} ref={ref_input2} onChange={() => {text2.length != 0 ? '' : ref_input3.current.focus()}} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
+                <TextInput placeholder="0" value={text3} onChangeText={onChangeText3} ref={ref_input3} onChange={() => {text3.length != 0 ? '' : ref_input4.current.focus()}} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
+                <TextInput placeholder="0" value={text4} onChangeText={onChangeText4} ref={ref_input4} onChange={() => {text4.length != 0 ? '' : ref_input5.current.focus()}} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
+                <TextInput placeholder="0" value={text5} onChangeText={onChangeText5} ref={ref_input5} onChange={() => {text5.length != 0 ? '' : ref_input6.current.focus()}} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
                 <TextInput placeholder="0" value={text6} onChangeText={onChangeText6} ref={ref_input6} keyboardType="number-pad" maxLength={1} style={{textAlign: 'center',paddingVertical: 20,paddingHorizontal: 15,fontSize: 24,fontFamily: 'Urbanist-Bold', backgroundColor: '#FAFAFA', borderRadius: 18,marginHorizontal: 5,borderWidth: 1,borderColor: '#EEEE'}}/>
             </View>
             <View>
