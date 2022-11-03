@@ -1,5 +1,5 @@
 import Styles from './Style';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import Antdesign from 'react-native-vector-icons/AntDesign';
@@ -11,29 +11,37 @@ import { View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native'
 
 const SignIn_Screen = () => {
   const navigation = useNavigation();
+
+  const [userDetail, setUserDetail] = useState({});
+
+  console.log(userDetail);
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: '993010448494-junrsuvh8tq7g3ena1edbb8lnj43e0h5.apps.googleusercontent.com',
     });
   }, []);
 
+  //Google SignIn function
+
   const GoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       const { idToken } = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      navigation.navigate('Welcome');
+      navigation.navigate('Profile');
+      setUserDetail((userDetail) => ({
+        ...userDetail,
+        ...googleCredential,
+      }));
+
       return auth().signInWithCredential(googleCredential);
     } catch (error) {
       console.log(error);
     }
   };
 
-  async function Signout() {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  }
+  //Facebook login function
 
   const FacebookLogin = async () => {
     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
@@ -42,17 +50,19 @@ const SignIn_Screen = () => {
     }
     // Once signed in, get the users AccesToken
     const data = await AccessToken.getCurrentAccessToken();
-    console.log(data);
+    // console.log(data);
 
     if (!data) {
       throw 'Something went wrong obtaining access token';
     }
-    navigation.navigate('Welcome');
+    navigation.navigate('Profile');
     // Create a Firebase credential with the AccessToken
     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
     // Sign-in the user with the credential
     return auth().signInWithCredential(facebookCredential);
   };
+
+  //SignOut function
 
   return (
     <SafeAreaView>

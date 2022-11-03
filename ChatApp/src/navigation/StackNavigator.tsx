@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SignIn_Screen from '../screens/SignUp_SignIn/SignIn_Screen';
 import WelcomeUI from '../screens/Welcome_Screen/WelcomeUI';
-import Welcome_screen from '../screens/Welcome_screen';
+import Profile_Screen from '../screens/Profile/profile';
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   return (
@@ -23,10 +23,10 @@ const StackNavigator = () => {
           }}
         />
         <Stack.Screen
-          name="Welcome"
-          component={Welcome_screen}
+          name="Profile"
+          component={Profile_Screen}
           options={{
-            headerShown: true,
+            headerShown: false,
           }}
         />
       </Stack.Navigator>

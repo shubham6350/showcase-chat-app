@@ -7,11 +7,7 @@ const App = () => {
     SplashScreen.hide();
   });
 
-  return (
-    <>
-      <StackNavigator />
-    </>
-  );
+  return <StackNavigator />;
 };
 
 export default App;
