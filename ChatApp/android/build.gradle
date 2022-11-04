@@ -29,6 +29,12 @@ buildscript {
     }
 }
 
+subprojects { project ->
+    if (project.name == 'react-native-reanimated') {
+        project.configurations { compile {} }
+    }
+}
+
 allprojects {
     repositories {
         maven {
