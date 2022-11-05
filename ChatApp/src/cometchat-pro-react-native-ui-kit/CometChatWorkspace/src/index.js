@@ -7,7 +7,7 @@ export {
   CometChatUserList,
   CometChatUserListWithMessages,
 } from './components/Users';
-export { default as CometChatUI } from './components/CometChatUI';
+export { default as CometChatUI } from './components/CometChatUI/index';
 export { CometChatMessages } from './components/Messages';
 export {
   CometChatGroupList,
@@ -17,3 +17,5 @@ export {
   CometChatConversationList,
   CometChatConversationListWithMessages,
 } from './components/Chats';
+
+// export { default as CometChatUserProfile } from './components/UserProfile/CometChatUserProfile/index';
