@@ -133,9 +133,11 @@ const SignIn_Screen = () => {
         </View>
         <View style={{ borderWidth: 1, width: 130, borderColor: '#EEEEEE' }}></View>
       </View>
-      <View style={Styles.Button_container}>
-        <SignIn_Button title="Sign in with Phone Number" />
-      </View>
+      <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+        <View style={Styles.Button_container}>
+          <SignIn_Button title="Sign in with Phone Number" />
+        </View>
+      </TouchableOpacity>
       <View
         style={{
           justifyContent: 'center',
@@ -146,7 +148,7 @@ const SignIn_Screen = () => {
       >
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ color: '#9E9E9E' }}>Don't have an account?</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
             <Text style={{ color: '#246BFD' }}> Sign up</Text>
           </TouchableOpacity>
         </View>
