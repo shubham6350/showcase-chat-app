@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import StackNavigator from './src/navigation/StackNavigator';
+import StackNavigator from './StackNavigator';
 import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {

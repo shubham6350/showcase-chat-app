@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignIn_Screen from '../screens/SignUp_SignIn/SignIn_Screen';
-import WelcomeUI from '../screens/Welcome_Screen/WelcomeUI';
-import Profile_Screen from '../screens/Profile/profile';
-import PLAuth from '../screens/phone_auth/otp_signin/phone_auth';
-import VLotp from '../screens/phone_auth/otp_signin/otp_verify';
-import VSotp from '../screens/phone_auth/otp_signup/otp_verify';
-import PSAuth from '../screens/phone_auth/otp_signup/phone_auth';
+import SignIn_Screen from './src/screens/SignUp_SignIn/SignIn_Screen';
+import WelcomeUI from './src/screens/Welcome_Screen/WelcomeUI';
+import Profile_Screen from './src/screens/Profile/profile';
+import PLAuth from './src/screens/phone_auth/otp_signin/phone_auth';
+import VLotp from './src/screens/phone_auth/otp_signin/otp_verify';
+import VSotp from './src/screens/phone_auth/otp_signup/otp_verify';
+import PSAuth from './src/screens/phone_auth/otp_signup/phone_auth';
 
 const Stack = createNativeStackNavigator();
 
