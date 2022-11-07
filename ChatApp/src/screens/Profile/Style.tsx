@@ -83,7 +83,7 @@ const Styles = StyleSheet.create({
     justifyContent: 'space-between',
 
     flexDirection: 'row',
-    padding: 5,
+    padding: 8,
     width: '100%',
   },
   Icon_container: {
@@ -148,5 +148,6 @@ const Styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
+
 });
 export default Styles;

@@ -137,6 +137,11 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+        
+
+
+    
+
     defaultConfig {
         applicationId "com.chatapp"
         minSdkVersion rootProject.ext.minSdkVersion

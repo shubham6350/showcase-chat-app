@@ -12,7 +12,7 @@ import {
   Button,
   Platform,
 } from 'react-native';
-import Styles from './Style';
+import Styles from './style';
 import SignIn_Button from '../../components/Buttons/SignIn';
 import { SafeAreaView } from 'react-native';
 import Antdesign from 'react-native-vector-icons/AntDesign';
@@ -23,19 +23,18 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 var ImagePicker = require('react-native-image-picker');
 
 const Profile_Screen = ({ navigation }: any) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
-  const [nickName, setNickName] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
   const [email, setEmail] = useState('');
   const [about, setAbout] = useState('');
-  const [uploading, setUploading] = useState(false);
-  const [transferred, setTransferred] = useState(0);
-  const [imageUrl, setImageUrl] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [fileUri, setFileUri] = useState('');
+  const [nickName, setNickName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
 
   //select image from device
 
@@ -49,14 +48,16 @@ const Profile_Screen = ({ navigation }: any) => {
       },
     };
     ImagePicker.launchImageLibrary(options, (response: any) => {
-      console.log('Response = ', response);
+      // console.log('Response = ', response);
 
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        // console.log('User cancelled image picker');
+        Alert.alert('User  cancelled image Picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+        // console.log('ImagePicker Error: ', response.error);
+        console.warn(response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        console.warn('User tapped custom button: ', response.customButton);
         Alert.alert(response.customButton);
       } else {
         const source = { uri: response.uri };
@@ -64,7 +65,7 @@ const Profile_Screen = ({ navigation }: any) => {
         // You can also display the image using data:
         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
         // alert(JSON.stringify(response));s
-        console.log('response====', JSON.stringify(response.assets[0].uri));
+        // console.log('response====', JSON.stringify(response.assets[0].uri));
         setFileUri(response.assets[0].uri);
       }
     });
@@ -99,13 +100,12 @@ const Profile_Screen = ({ navigation }: any) => {
 
   // rendering image
 
-  const renderFileUri = () => {
-    if (imageUrl) {
-      return <Image source={{ uri: imageUrl }} style={Styles.images} />;
-    } else {
-      return <Image source={require('../../../assets/images/dummy.png')} style={Styles.images} />;
-    }
-  };
+  const renderFileUri = () => (
+    <Image
+      source={imageUrl ? { uri: imageUrl } : require('../../../assets/images/dummy.png')}
+      style={Styles.images}
+    />
+  );
   const openModal = () => {
     setModalVisible(true);
   };
@@ -180,10 +180,6 @@ const Profile_Screen = ({ navigation }: any) => {
     setDateOfBirth(fDate);
   };
 
-  const showMode = (currentMode: any) => {
-    setShow(true);
-    setMode(currentMode);
-  };
   return (
     <SafeAreaView style={{ padding: 15 }}>
       <Modal
@@ -216,7 +212,6 @@ const Profile_Screen = ({ navigation }: any) => {
               </View>
               <View
                 style={{
-                  // backgroundColor: 'green',
                   width: '65%',
                 }}
               >
@@ -285,8 +280,31 @@ const Profile_Screen = ({ navigation }: any) => {
                 </View>
               </View>
             </View>
-            <View style={{width:'90%',justifyContent:'center',alignItems:'center'}} >
-              <Button onPress={() => SubmitImage()} title="Upload Image"  />
+            <View
+              style={{
+                flex: 1,
+                width: '100%',
+                height: '20%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {/* <Button onPress={() => SubmitImage()} title="Upload Image" /> */}
+              <TouchableOpacity>
+                <View
+                  style={{
+                    backgroundColor: '#246BFD',
+                    borderRadius: 5,
+                    width: '90%',
+                    height: '90%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding:3,
+                  }}
+                >
+                  <Text style={{ fontWeight: '700', color: '#fff' }}>Submit</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -354,15 +372,16 @@ const Profile_Screen = ({ navigation }: any) => {
                 <DateTimePicker
                   testID="dateTimePicker"
                   value={date}
-                  mode={mode}
+                  mode="date"
                   is24Hour={true}
                   display="default"
                   onChange={onChange}
+                  style={{ width: 20, height: 18 }}
                 />
               )}
 
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => showMode()}>
+                <TouchableOpacity onPress={() => setShow(true)}>
                   <Antdesign name="calendar" size={15} />
                 </TouchableOpacity>
               </View>

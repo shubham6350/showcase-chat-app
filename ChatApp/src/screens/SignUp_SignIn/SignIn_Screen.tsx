@@ -7,6 +7,7 @@ import SignIn_Button from '../../components/Buttons/SignIn';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import Social_Media_button from '../../components/Buttons/Social_Media';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GOOGLE_SIGNIN } from '../../constants/const';
 import { View, Text, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 
 const SignIn_Screen = () => {
@@ -18,7 +19,7 @@ const SignIn_Screen = () => {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '993010448494-junrsuvh8tq7g3ena1edbb8lnj43e0h5.apps.googleusercontent.com',
+      webClientId: GOOGLE_SIGNIN.WEB_CLIENT_ID,
     });
   }, []);
 
