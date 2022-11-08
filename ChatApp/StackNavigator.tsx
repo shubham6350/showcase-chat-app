@@ -7,6 +7,16 @@ import PLAuth from './src/screens/phone_auth/otp_signin/phone_auth';
 import VLotp from './src/screens/phone_auth/otp_signin/otp_verify';
 import VSotp from './src/screens/phone_auth/otp_signup/otp_verify';
 import PSAuth from './src/screens/phone_auth/otp_signup/phone_auth';
+import {
+  CometChatUI,
+  CometChatMessages,
+  CometChatUserListWithMessages,
+  CometChatUserList,
+  CometChatGroupListWithMessages,
+  CometChatGroupList,
+  CometChatConversationListWithMessages,
+  CometChatConversationList,
+} from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/index';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +73,20 @@ const StackNavigator = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Chat"
+          component={CometChatUI}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Conversation" component={CometChatConversationListWithMessages} />
+        <Stack.Screen name="ConversationComponent" component={CometChatConversationList} />
+        <Stack.Screen name="Group" component={CometChatGroupListWithMessages} />
+        <Stack.Screen name="GroupComponent" component={CometChatGroupList} />
+        <Stack.Screen name="Users" component={CometChatUserListWithMessages} />
+        <Stack.Screen name="UsersComponent" component={CometChatUserList} />
+        <Stack.Screen name="CometChatMessages" component={CometChatMessages} />
       </Stack.Navigator>
     </NavigationContainer>
   );
