@@ -1,20 +1,21 @@
 import React from 'react';
-import { Text, View, TouchableHighlight } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { CometChatUserPresence, CometChatAvatar } from '../../Shared';
 
 import style from './styles';
 import theme from '../../../resources/theme';
+import 'react-native-gesture-handler';
 
 const CometChatUserListItem = (props) => {
   const viewTheme = { ...theme, ...props.theme };
 
   return (
-    <TouchableHighlight
+    <TouchableOpacity
       key={props.user.uid}
       onPress={() => props.clickHandler(props.user)}
       underlayColor={viewTheme.backgroundColor.listUnderlayColor}>
       <View style={style.listItem}>
-        <View style={[style.avatarStyle, { borderRadius: 22 }]}>
+        <View style={[style.avatarStyle, { borderRadius: 30 }]}>
           <CometChatAvatar
             image={{ uri: props.user.avatar }}
             cornerRadius={22}
@@ -36,7 +37,7 @@ const CometChatUserListItem = (props) => {
           </Text>
         </View>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   );
 };
 

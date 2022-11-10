@@ -874,6 +874,7 @@ class CometChatGroupList extends React.Component {
                 open={this.state.createGroup}
                 close={() => this.createGroupHandler(false)}
                 actionGenerated={this.createGroupActionHandler}
+                // itemClick={this.props.onItemClick}
               />
               {passwordScreen}
             </SafeAreaView>

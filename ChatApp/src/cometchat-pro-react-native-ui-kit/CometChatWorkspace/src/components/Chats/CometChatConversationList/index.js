@@ -33,7 +33,8 @@ import {
 } from 'react-native';
 import { logger } from '../../../utils/common';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import 'react-native-gesture-handler';
+
 class CometChatConversationList extends React.Component {
   loggedInUser = null;
 
@@ -48,6 +49,7 @@ class CometChatConversationList extends React.Component {
       showSmallHeader: false,
       isMessagesSoundEnabled: true,
     };
+
     this.chatListRef = React.createRef();
     this.theme = { ...theme, ...this.props.theme };
     Sound.setCategory('Ambient', true);
@@ -962,6 +964,7 @@ class CometChatConversationList extends React.Component {
         </View>
 
         <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Users')}
           style={{
             width: '100%',
             marginTop: 40,

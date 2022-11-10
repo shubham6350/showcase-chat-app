@@ -10,13 +10,15 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  Image,
+  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import {
   CometChatContextProvider,
   CometChatContext,
 } from '../../../utils/CometChatContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-
 import { CometChatManager } from '../../../utils/controller';
 
 import { UserListManager } from './controller';
@@ -27,6 +29,8 @@ import { logger } from '../../../utils/common';
 import * as enums from '../../../utils/enums';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import DropDownAlert from '../../Shared/DropDownAlert';
+import 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class CometChatUserList extends React.PureComponent {
   static contextType = CometChatContext;
 
@@ -83,7 +87,8 @@ class CometChatUserList extends React.PureComponent {
 
   checkRestrictions = async () => {
     let context = this.contextProviderRef.state;
-    let isUserSearchEnabled = await context.FeatureRestriction.isUserSearchEnabled();
+    let isUserSearchEnabled =
+      await context.FeatureRestriction.isUserSearchEnabled();
     this.setState({ restrictions: { isUserSearchEnabled } });
   };
 
@@ -319,8 +324,7 @@ class CometChatUserList extends React.PureComponent {
   listHeaderComponent = () => {
     return (
       <View style={[style.contactHeaderStyle]}>
-        <Text style={style.contactHeaderTitleStyle}>Users</Text>
-        {this.state.restrictions?.isUserSearchEnabled ? (
+        {/* {this.state.restrictions?.isUserSearchEnabled ? (
           <TouchableWithoutFeedback
             onPress={() => this.textInputRef.current.focus()}>
             <View
@@ -355,7 +359,31 @@ class CometChatUserList extends React.PureComponent {
               />
             </View>
           </TouchableWithoutFeedback>
-        ) : null}
+        ) : null} */}
+        <View
+          style={{
+            height: 60,
+            // backgroundColor: 'red',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 24,
+            marginBottom: 5,
+          }}>
+          <View style={{ height: 60, width: 60 }}>
+            <Image
+              style={{ height: '100%', width: '100%' }}
+              source={require('../../../../../../../assets/images/Group-Icon.png')}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Create_Group')}>
+            <View style={{ width: 260, height: 25 }}>
+              <Text style={{ fontWeight: '700', fontSize: 18 }}>New Group</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        {/* <Text style={style.contactHeaderTitleStyle}>Users</Text> */}
       </View>
     );
   };
@@ -410,7 +438,65 @@ class CometChatUserList extends React.PureComponent {
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={style.contactWrapperStyle}>
-            <View style={style.headerContainer}></View>
+            <View style={style.headerContainer}>
+              <View
+                style={{
+                  height: '45%',
+                  width: '95%',
+                  justifyContent: 'space-evenly',
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  marginTop: 45,
+                  // backgroundColor: 'yellow',
+                }}>
+                <View
+                  style={{
+                    height: '60%',
+                    width: '10%',
+                    // backgroundColor: 'blue',
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Chat')}>
+                    <Icon name="arrow-back" size={30} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    height: '60%',
+                    width: '60%',
+                    // backgroundColor: 'red',
+                  }}>
+                  <Text
+                    style={{ fontWeight: '600', fontSize: 24, color: '#fff' }}>
+                    Select Contact
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    height: '60%',
+                    width: '10%',
+                    // backgroundColor: 'blue',
+                  }}>
+                  <TouchableOpacity>
+                    <Icon name="search-outline" size={30} color="#fff" />
+                  </TouchableOpacity>
+                </View>
+
+                <View
+                  style={{
+                    height: '60%',
+                    width: '10%',
+                    // backgroundColor: 'red',
+                  }}>
+                  <Icon
+                    name="ellipsis-horizontal-circle-outline"
+                    size={30}
+                    color="#fff"
+                  />
+                </View>
+              </View>
+            </View>
             {this.listHeaderComponent()}
             <FlatList
               data={userListWithHeaders}

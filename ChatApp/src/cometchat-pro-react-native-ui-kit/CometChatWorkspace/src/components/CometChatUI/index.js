@@ -62,7 +62,7 @@ function CometChatUI() {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
           }}>
-          <View style={{ width: '12%',height:'100%', borderRadius: 12 }}>
+          <View style={{ width: '12%', height: '100%', borderRadius: 12 }}>
             <Image
               style={{ height: '100%', width: '100%' }}
               source={require('../../../../../../assets/images/App_Logo.png')}
@@ -151,15 +151,16 @@ function CometChatUI() {
                   component={CometChatConversationListWithMessages}
                 />
               )}
-              {tabs.isUserListEnabled && (
+              {/* {tabs.isUserListEnabled && (
                 <Tab.Screen
                   name="Users"
                   component={CometChatUserListWithMessages}
                 />
-              )}
+              )} */}
               {tabs.isGroupListEnabled && (
                 <Tab.Screen
-                  name="Groups"
+                  // name="Groups"
+                  name="status"
                   component={CometChatGroupListWithMessages}
                 />
               )}

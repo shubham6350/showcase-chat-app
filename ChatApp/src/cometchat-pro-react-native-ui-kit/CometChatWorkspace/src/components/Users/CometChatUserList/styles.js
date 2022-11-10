@@ -5,11 +5,12 @@ import { calc } from '../../../utils/consts';
 export default StyleSheet.create({
   contactWrapperStyle: {
     height: '100%',
-    backgroundColor: 'white',
+    // backgroundColor: 'yellow',
   },
   contactHeaderStyle: {
-    paddingBottom: 14,
+    // padding: 10,
     paddingHorizontal: 16,
+
   },
   contactHeaderCloseStyle: {
     height: 24,
@@ -23,7 +24,7 @@ export default StyleSheet.create({
   },
   contactSearchStyle: {
     padding: 8,
-    marginTop: 16,
+    marginTop: 5,
     flexDirection: 'row',
     position: 'relative',
     alignItems: 'center',
@@ -80,8 +81,9 @@ export default StyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
-    height: 48,
+    height: 120,
     width: '100%',
     justifyContent: 'center',
+    backgroundColor: '#246BFD',
   },
 });

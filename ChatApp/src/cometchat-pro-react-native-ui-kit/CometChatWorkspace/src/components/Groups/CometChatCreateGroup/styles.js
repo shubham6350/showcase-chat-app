@@ -8,7 +8,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
   },
   innerContainer: {
-    height: '90%',
+    height: '100%',
     backgroundColor: 'white',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,

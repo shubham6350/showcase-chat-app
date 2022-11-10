@@ -17,6 +17,7 @@ import {
   CometChatConversationListWithMessages,
   CometChatConversationList,
 } from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/index';
+import { CometChatCreateGroup } from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/components/Groups/index';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,8 +85,21 @@ const StackNavigator = () => {
         <Stack.Screen name="ConversationComponent" component={CometChatConversationList} />
         <Stack.Screen name="Group" component={CometChatGroupListWithMessages} />
         <Stack.Screen name="GroupComponent" component={CometChatGroupList} />
-        <Stack.Screen name="Users" component={CometChatUserListWithMessages} />
-        <Stack.Screen name="UsersComponent" component={CometChatUserList} />
+        <Stack.Screen
+          name="Users"
+          component={CometChatUserListWithMessages}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="Create_Group" component={CometChatCreateGroup} />
+        <Stack.Screen
+          name="UsersComponent"
+          component={CometChatUserList}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Stack.Screen name="CometChatMessages" component={CometChatMessages} />
       </Stack.Navigator>
     </NavigationContainer>

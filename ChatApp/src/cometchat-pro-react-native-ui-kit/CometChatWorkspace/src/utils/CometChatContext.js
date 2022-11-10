@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { UIKitSettings } from './UIKitSettings';
 import { FeatureRestriction } from './FeatureRestriction';
 import { theme } from '../resources/theme';
+import { SafeAreaView } from 'react-native';
 
 export const CometChatContext = React.createContext({});
 

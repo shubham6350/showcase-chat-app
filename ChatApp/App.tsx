@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { COMETCHAT_CONSTANTS } from './src/CONSTS';
-// import theme from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/resources/theme';
 import theme from 'react-native-elements/dist/config/theme';
 
 const styles = StyleSheet.create({
@@ -86,7 +85,7 @@ const App = () => {
       // You can now call login function.
 
       const authKey = COMETCHAT_CONSTANTS.AUTH_KEY;
-      const uid = 'user1';
+      const uid = 'user2';
 
       CometChat.login(uid, authKey).then(
         (user) => {
