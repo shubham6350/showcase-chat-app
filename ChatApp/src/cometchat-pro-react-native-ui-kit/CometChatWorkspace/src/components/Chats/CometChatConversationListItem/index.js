@@ -43,8 +43,10 @@ class CometChatConversationListItem extends React.Component {
   }
 
   checkRestrictions = async () => {
-    let isUnreadCountEnabled = await this.context.FeatureRestriction.isUnreadCountEnabled();
-    let isHideDeletedMessagesEnabled = await this.context.FeatureRestriction.isHideDeletedMessagesEnabled();
+    let isUnreadCountEnabled =
+      await this.context.FeatureRestriction.isUnreadCountEnabled();
+    let isHideDeletedMessagesEnabled =
+      await this.context.FeatureRestriction.isHideDeletedMessagesEnabled();
 
     this.setState(
       {
@@ -379,6 +381,7 @@ class CometChatConversationListItem extends React.Component {
             style={[
               styles.itemDetailsContainer,
               { borderBottomColor: this.props.theme.borderColor.primary },
+              // { backgroundColor: 'blue' },
             ]}>
             <View
               style={{
