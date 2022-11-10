@@ -87,7 +87,6 @@ class CometChatMessages extends React.PureComponent {
       .getLoggedInUser()
       .then((user) => {
         this.loggedInUser = user;
-        console.log("abcd---------------",user);
       })
       .catch(() => {
          logger('[CometChatMessages] getLoggedInUser error', error);

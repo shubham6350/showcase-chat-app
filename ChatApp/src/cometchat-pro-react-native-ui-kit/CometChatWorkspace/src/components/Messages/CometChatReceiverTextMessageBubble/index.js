@@ -58,7 +58,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
     return (
       <Autolink
         text={message.text}
-        style={style.autoLinkStyle}
+        style={style.autolinkStyle}
         textProps={{ selectable: true }}
         linkProps={{ suppressHighlighting: true }}
         linkStyle={style.messageLinkStyle}
@@ -207,22 +207,34 @@ const CometChatReceiverTextMessageBubble = (props) => {
               onLongPress={() => {
                 props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
               }}>
-                <View style={style.messageWrapperStyle}>
-                {messageText}
-                <View style={style.messageInfoWrapperStyle}>
-                <CometChatThreadedMessageReplyCount
-                theme={props.theme}
-                {...props}
-                message={message}
-                />
-                <CometChatReadReceipt
-                theme={props.theme}
-                {...props}
-                message={message}
-                />
-          </View>
-        </View>  
+              <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={[
+                    style.messageWrapperStyle,
+                    {
+                      backgroundColor: '#F8F8F8',
+                    },
+                  ]}>
+                  {messageText}
+                </View>
+              </View>
             </TouchableWithoutFeedback>
+          </View>
+          <View style={[style.containerStyle]}>
+            <View style={[style.messageInfoWrapperStyle]}>
+              <CometChatReadReceipt {...props} message={message} />
+
+              <CometChatThreadedMessageReplyCount
+                {...props}
+                message={message}
+              />
+              <CometChatMessageReactions
+                theme={props.theme}
+                {...props}
+                message={message}
+                showMessage={props?.showMessage}
+              />
+            </View>
           </View>
         </View>
       </View>
