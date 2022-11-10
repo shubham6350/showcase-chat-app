@@ -154,7 +154,6 @@ const Profile_Screen = ({ navigation }: any,props: any) => {
           setFileUri(''),
           Keyboard.dismiss();
           dispatch(actions.auth(uid, COMETCHAT_CONSTANTS.AUTH_KEY, true))
-        user_chat_login();
       })
       .catch((error) => {
         Alert.alert(error);
