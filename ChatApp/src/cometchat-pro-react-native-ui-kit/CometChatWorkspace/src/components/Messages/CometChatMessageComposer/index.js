@@ -10,11 +10,19 @@ import {
   Text,
   Keyboard,
   Platform,
+  PermissionsAndroid,
+  TouchableWithoutFeedback,
+  Modal,
+  Image,
   Vibration
 } from 'react-native';
 import * as consts from '../../../utils/consts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import DocumentPicker from 'react-native-document-picker';
 import AntDIcon from 'react-native-vector-icons/AntDesign';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import Sound from 'react-native-sound';
 
@@ -26,7 +34,7 @@ import {
 } from '../../Messages/Extensions';
 import CometChatStickerKeyboard from '../CometChatStickerKeyboard';
 import ComposerActions from './composerActions';
-
+import Feather from 'react-native-vector-icons/Feather';
 import { outgoingMessageAlert } from '../../../resources/audio';
 import * as enums from '../../../utils/enums';
 import * as actions from '../../../utils/actions';
@@ -36,6 +44,7 @@ import { CometChatContext } from '../../../utils/CometChatContext';
 
 export default class CometChatMessageComposer extends React.PureComponent {
   static contextType = CometChatContext;
+  sheetRef = React.createRef(null);
   constructor(props) {
     super(props);
 
@@ -59,6 +68,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       stickerViewer: false,
       composerActionsVisible: false,
       user: null,
+      snapPoints: null,
       keyboardActivity: false,
       restrictions: null,
     };
@@ -595,6 +605,100 @@ export default class CometChatMessageComposer extends React.PureComponent {
     }, typingInterval);
   };
 
+  pickDocument = async () => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+      const file = {
+        name: res[0].name,
+        type: res[0].type,
+        uri: res[0].uri,
+      };
+      this.sendMediaMessage(file, CometChat.MESSAGE_TYPE.FILE);
+      this.sheetRef?.current?.snapTo(1);
+      // this.props.close();
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err;
+      }
+    }
+  };
+
+  takePhoto = async (mediaType = 'photo') => {
+    try {
+      let granted = null;
+      if (Platform.OS === 'android') {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'CometChat Camera Permission',
+            message: 'CometChat needs access to your camera ',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+      }
+
+      if (
+        Platform.OS === 'ios' ||
+        granted === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        launchCamera(
+          {
+            mediaType,
+            includeBase64: false,
+            cameraType: 'back',
+          },
+          (response) => {
+            this.sheetRef?.current?.snapTo(1);
+            if (response.didCancel) {
+              return null;
+            }
+            let type = null;
+            let name = null;
+            if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
+              name = response.assets[0].fileName;
+              type = response.assets[0].type;
+            } else {
+              type = response.assets[0].type;
+              name = 'Camera_001.jpeg';
+            }
+            if (mediaType == 'video') {
+              type = 'video/quicktime';
+              name = 'Camera_002.mov';
+            }
+            const file = {
+              name:
+                Platform.OS === 'android' && mediaType != 'video'
+                  ? response.assets[0].fileName
+                  : name,
+              type:
+                Platform.OS === 'android' && mediaType != 'video'
+                  ? response.assets[0].type
+                  : type,
+              uri:
+                Platform.OS === 'android'
+                  ? response.assets[0].uri
+                  : response.assets[0].uri.replace('file://', ''),
+            };
+            this.sendMediaMessage(
+              file,
+              mediaType === 'photo'
+                ? CometChat.MESSAGE_TYPE.IMAGE
+                : CometChat.MESSAGE_TYPE.VIDEO,
+            );
+          },
+        );
+      }
+    } catch (err) {
+      this.sheetRef?.current?.snapTo(1);
+      this.props.close();
+    }
+  };
+
   render() {
     let disabled = false;
     if (this.props.item.blockedByMe) {
@@ -625,6 +729,64 @@ export default class CometChatMessageComposer extends React.PureComponent {
         onPress={() => this.sendTextMessage()}>
         <Icon name="send" size={20} color="#3299ff" />
       </TouchableOpacity>
+    );
+
+    let inputVal = (
+      <View style={{height: 50,flexDirection: 'row',alignItems: 'center',marginBottom: 10}}>
+      <View style={{width: '86%' ,height: 50,backgroundColor: '#FAFAFA', borderRadius: 10, marginRight: 10, flexDirection: 'row',alignItems: 'center',paddingHorizontal: 10, paddingVertical: 15}}>
+      <TouchableOpacity
+        style={style.plusCircleContainer}
+        disabled={disabled}
+        onPress={() => {
+           this.setState({ composerActionsVisible: true });
+        }}>
+        <Feather size={20} name="smile" color="rgba(0,0,0,0.35)" />
+      </TouchableOpacity>
+      <TextInput
+        style={style.messageInputStyle}
+        editable={!disabled}
+        value={this.state.messageInput}
+        placeholder="Type a Message..."
+        onChangeText={(text) => this.changeHandler(text)}
+        onSubmitEditing={() => {
+          return this.sendTextMessage();
+        }}
+        onBlur={this.endTyping}
+        ref={this.messageInputRef}
+      />
+      <TouchableOpacity
+        style={style.plusCircleContainer}
+        disabled={disabled}
+        onPress={() => this.pickDocument()}>
+        <Entypo size={20} name="attachment" color="rgba(0,0,0,0.35)" />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={style.plusCircleContainer}
+        disabled={disabled}
+        onPress={() => this.takePhoto()}>
+        <Entypo size={20} name="camera" color="rgba(0,0,0,0.35)" />
+      </TouchableOpacity>
+      </View>
+      <View>
+      {/* <Text>T</Text> */}
+        {this.state.messageInput.length > 0 ? 
+      <TouchableOpacity
+      style={style.plusCircleContainerr}
+      disabled={disabled}
+      onPress={() => this.sendTextMessage()}>
+        <MaterialCommunityIcons size={20} name="send" color="white" />
+      </TouchableOpacity>
+      :
+      <TouchableOpacity
+      style={style.plusCircleContainerr}
+      disabled={disabled}
+      onPress={() => {
+          this.setState({ composerActionsVisible: true });
+      }}>
+        <MaterialCommunityIcons size={20} name="microphone" color="white" />
+      </TouchableOpacity> }
+      </View>
+      </View>
     );
 
     if (
@@ -809,27 +971,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
           sendMediaMessage={this.sendMediaMessage}
         />
         <View style={style.mainContainer}>
-          <TouchableOpacity
-            style={style.plusCircleContainer}
-            disabled={disabled}
-            onPress={() => {
-              this.setState({ composerActionsVisible: true });
-            }}>
-            <AntDIcon size={26} name="pluscircle" color="rgba(0,0,0,0.35)" />
-          </TouchableOpacity>
-          <View style={style.textInputContainer}>
-            <TextInput
-              style={style.messageInputStyle}
-              editable={!disabled}
-              value={this.state.messageInput}
-              placeholder="Type a Message..."
-              onChangeText={(text) => this.changeHandler(text)}
-              onBlur={this.endTyping}
-              ref={this.messageInputRef}
-            />
-            {sendBtn}
-          </View>
-          {liveReactionBtn}
+          {inputVal}
         </View>
       </View>
     );

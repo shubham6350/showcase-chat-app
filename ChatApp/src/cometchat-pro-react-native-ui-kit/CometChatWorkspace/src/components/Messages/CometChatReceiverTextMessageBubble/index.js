@@ -58,7 +58,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
     return (
       <Autolink
         text={message.text}
-        style={style.autolinkStyle}
+        style={style.autoLinkStyle}
         textProps={{ selectable: true }}
         linkProps={{ suppressHighlighting: true }}
         linkStyle={style.messageLinkStyle}
@@ -207,34 +207,22 @@ const CometChatReceiverTextMessageBubble = (props) => {
               onLongPress={() => {
                 props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
               }}>
-              <View style={{ flexDirection: 'row' }}>
-                <View
-                  style={[
-                    style.messageWrapperStyle,
-                    {
-                      backgroundColor: '#F8F8F8',
-                    },
-                  ]}>
-                  {messageText}
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-          <View style={[style.containerStyle]}>
-            <View style={[style.messageInfoWrapperStyle]}>
-              <CometChatReadReceipt {...props} message={message} />
-
-              <CometChatThreadedMessageReplyCount
-                {...props}
-                message={message}
-              />
-              <CometChatMessageReactions
+                <View style={style.messageWrapperStyle}>
+                {messageText}
+                <View style={style.messageInfoWrapperStyle}>
+                <CometChatThreadedMessageReplyCount
                 theme={props.theme}
                 {...props}
                 message={message}
-                showMessage={props?.showMessage}
-              />
-            </View>
+                />
+                <CometChatReadReceipt
+                theme={props.theme}
+                {...props}
+                message={message}
+                />
+          </View>
+        </View>  
+            </TouchableWithoutFeedback>
           </View>
         </View>
       </View>

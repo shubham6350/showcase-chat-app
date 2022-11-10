@@ -17,10 +17,10 @@ export default StyleSheet.create({
   },
   headerContainer: {
     flexDirection: 'row',
-    height: 60,
+    height: 80,
     paddingRight: 12,
     elevation: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#3375FE',
     zIndex: 5,
     alignItems: 'center',
   },
@@ -28,10 +28,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 20,
   },
   backText: {
     fontSize: 20,
-    color: theme.color.blue,
+    color: '#fff',
   },
   headerDetailContainer: {
     flex: 1,
@@ -52,14 +53,18 @@ export default StyleSheet.create({
   videoIcon: { width: 34, height: 24, resizeMode: 'contain' },
   itemDetailContainer: {
     flex: 1,
+    marginLeft: 10,
   },
   itemNameText: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: '500',
+    color: '#fff',
+    fontFamily: 'Urbanist-Bold',
   },
   statusText: {
     fontSize: 14,
-    color: theme.color.blue,
+    color: '#FFF',
+    fontFamily: 'Urbanist-Regular',
   },
   avatarContainer: {
     height: 40,

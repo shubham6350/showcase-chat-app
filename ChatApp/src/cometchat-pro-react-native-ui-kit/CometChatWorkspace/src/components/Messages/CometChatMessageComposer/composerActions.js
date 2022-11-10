@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Platform,
   PermissionsAndroid,
+  Image
 } from 'react-native';
 
 import IonIcon from 'react-native-vector-icons/Ionicons';
@@ -222,9 +223,12 @@ export default class ComposerActions extends Component {
       <TouchableOpacity
         style={style.actionButtonContainer}
         onPress={() => this.takePhoto()}>
-        <EvilIcon name="camera" size={24} />
-        <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
-          Take Photo
+        {/* <View style={{backgroundColor: '#009689', padding: 25,height: 80, borderRadius: 100}}>
+        <EvilIcon name="camera" size={36} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/camera.png')} style={{width: 68,height: 68}}/>
+        <Text style={{fontSize: 15, fontWeight: '500'}}>
+          Camera
         </Text>
       </TouchableOpacity>
     );
@@ -247,18 +251,20 @@ export default class ComposerActions extends Component {
       <TouchableOpacity
         style={style.actionButtonContainer}
         onPress={() => this.launchLibrary('photo')}>
-        <IonIcon name="image-outline" size={24} />
-
+        {/* <View style={{backgroundColor: '#9D28AC', padding: 25,height: 80, borderRadius: 100}}>
+        <IonIcon name="image-outline" size={30} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/gallery.png')} style={{width: 68,height: 68}}/>
         <Text
-          style={{
-            fontSize: 18,
-            marginLeft: 10,
+            style={{
+            fontSize: 15,
             fontWeight: '500',
           }}>
-          Photo Library
+          Gallery
         </Text>
       </TouchableOpacity>
     );
+
     let vp = (
       <TouchableOpacity
         style={style.actionButtonContainer}
@@ -270,17 +276,65 @@ export default class ComposerActions extends Component {
         </Text>
       </TouchableOpacity>
     );
+
+
+    let audio = (
+      <TouchableOpacity
+        style={style.actionButtonContainer}
+        onPress={() => this.launchLibrary('audio')}>
+        {/* <View style={{backgroundColor: '#FF981F', padding: 25,height: 80, borderRadius: 100}}>
+        <IonIcon name="ios-folder-outline" size={30} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/audio.png')} style={{width: 68,height: 68}}/>
+        <Text style={{ fontSize: 15, fontWeight: '500' }}>
+          Audio
+        </Text>
+      </TouchableOpacity>
+    );
+
+    let contact = (
+      <TouchableOpacity
+        style={style.actionButtonContainer}
+        onPress={() => this.launchLibrary('contact')}>
+        {/* <View style={{backgroundColor: '#FF981F', padding: 25,height: 80, borderRadius: 100}}>
+        <IonIcon name="ios-folder-outline" size={30} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/contact.png')} style={{width: 68,height: 68}}/>
+        <Text style={{ fontSize: 15, fontWeight: '500' }}>
+          Contact
+        </Text>
+      </TouchableOpacity>
+    );
+    
     let docs = (
       <TouchableOpacity
         style={style.actionButtonContainer}
         onPress={this.pickDocument}>
-        <IonIcon name="ios-folder-outline" size={24} />
-
-        <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: '500' }}>
+        {/* <View style={{backgroundColor: '#FF981F', padding: 25,height: 80, borderRadius: 100}}>
+        <IonIcon name="ios-folder-outline" size={30} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/document.png')} style={{width: 68,height: 68}}/>
+        <Text style={{ fontSize: 15, fontWeight: '500' }}>
           Document
         </Text>
       </TouchableOpacity>
     );
+
+    let location = (
+      <TouchableOpacity
+        style={style.actionButtonContainer}
+        // onPress={this.pickDocument}
+        >
+        {/* <View style={{backgroundColor: '#FF981F', padding: 25,height: 80, borderRadius: 100}}>
+        <IonIcon name="ios-folder-outline" size={30} color={'#fff'} />
+        </View> */}
+        <Image source={require('../../../../../../../assets/images/location.png')} style={{width: 68,height: 68}}/>
+        <Text style={{ fontSize: 15, fontWeight: '500' }}>
+          location
+        </Text>
+      </TouchableOpacity>
+    );
+    
 
     let stickerBtn = (
       <TouchableOpacity style={style.actionButtonContainer}>
@@ -324,13 +378,22 @@ export default class ComposerActions extends Component {
     }
     return (
       <View style={style.reactionDetailsContainer}>
-        {takePhotoBtn}
-        {takeVideoBtn}
-        {avp}
-        {vp}
+        <View style={{flexDirection: 'row',height: 90,marginTop: 20, justifyContent: 'center'}}>
         {docs}
+        {takePhotoBtn}
+        {avp}
+        </View>
+        <View style={{flexDirection: 'row',height: 90,marginTop: 24,marginBottom: 20, justifyContent: 'center'}}>
+        {/* {takeVideoBtn} */}
+        {/* {vp} */}
+        {audio}
+        {location}
+        {contact}
         {stickerBtn}
+        </View>
+        {/* <View style={{flexDirection: 'row'}}>
         {createPollBtn}
+        </View> */}
       </View>
     );
   };
@@ -362,7 +425,7 @@ export default class ComposerActions extends Component {
                   enabledContentTapInteraction
                   overdragResistanceFactor={10}
                   renderContent={this.renderContent}
-                  renderHeader={this.renderHeader}
+                  // renderHeader={this.renderHeader}
                   onCloseEnd={() => {
                     close();
                   }}

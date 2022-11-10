@@ -20,7 +20,7 @@ const CometChatThreadedMessageReplyCount = (props) => {
         style={[
           styles.replyTextStyle,
           {
-            color: replyTheme.color.blue,
+            color: 'replyTheme.color.blue',
           },
         ]}>
         {replyText}

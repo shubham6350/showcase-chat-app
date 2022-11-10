@@ -1,17 +1,19 @@
 import { StyleSheet } from 'react-native';
 import { heightRatio } from '../../../utils/consts';
 import theme from '../../../resources/theme';
+import { COLORS } from '../../../../../../../assets/colors/colors';
 
 export default StyleSheet.create({
-  bottomSheetContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' },
+  bottomSheetContainer: { flex: 1,padding: 20 },
   mainContainer: { flexDirection: 'row', padding: 10, alignItems: 'center' },
-  plusCircleContainer: { marginRight: 10 },
+  plusCircleContainer: { marginRight: 10, marginLeft: 10 },
+  plusCircleContainerr: {padding: 10,backgroundColor: COLORS.ALERT_INFO ,borderRadius: 50},
   textInputContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  fullFlex: { flex: 1 },
+  fullFlex: { flex: 1},
   chatComposerStyle: {
     padding: 14,
     backgroundColor: theme.backgroundColor.white,
@@ -37,10 +39,10 @@ export default StyleSheet.create({
   messageInputStyle: {
     color: 'black',
     fontSize: 15,
-    padding: 10,
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 20,
+    backgroundColor: '#FAFAFA',
     flex: 1,
+    paddingTop: 0,
+    paddingBottom: 0,
     height: 36,
   },
   inputStickyStyle: {
@@ -56,13 +58,12 @@ export default StyleSheet.create({
     paddingVertical: 20,
     borderRadius: 20,
     minHeight: 200,
-    paddingBottom: 300,
   },
   actionButtonContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     height: 50 * heightRatio,
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
   },
   header: {
     width: '10%',

@@ -2,14 +2,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Text, View, Image, Platform } from 'react-native';
 import { get as _get, identity } from 'lodash';
 
-import blueDoubleTick from './resources/blue-double-tick-icon.png';
-import greyDoubleTick from './resources/grey-double-tick-icon.png';
-import greyTick from './resources/grey-tick-icon.png';
-import sendingTick from './resources/sending.png';
-import errorTick from './resources/error.png';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import blueDoubleTick from './resources/blue-double-tick-icon.png';  //checkmark-done-sharp done
+import greyDoubleTick from './resources/grey-double-tick-icon.png';  //checkmark-done-sharp
+import greyTick from './resources/grey-tick-icon.png'; //checkmark-sharp
+import sendingTick from './resources/sending.png'; //ellipsis-horizontal-circle
+import errorTick from './resources/error.png';  //ios-alert-circle
 import styles from './styles';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { CometChatContext } from '../../../utils/CometChatContext';
+
 const CometChatReadReceipt = (props) => {
   const context = useContext(CometChatContext);
   const [isDeliveryReceiptsEnabled, setIsDeliveryReceiptsEnabled] = useState(
@@ -22,31 +24,31 @@ const CometChatReadReceipt = (props) => {
     let isEnabled = await context.FeatureRestriction.isDeliveryReceiptsEnabled();
     setIsDeliveryReceiptsEnabled(isEnabled);
   };
-  let ticks = blueDoubleTick;
+  let ticks = 0;
   if (props.message.messageFrom === 'sender') {
     if (props.message.receiverType === CometChat.RECEIVER_TYPE.GROUP) {
       if (props.message.hasOwnProperty('error')) {
-        ticks = errorTick;
+        ticks = 'ios-alert-circle';
       } else {
-        ticks = sendingTick;
+        ticks = 'ellipsis-horizontal-circle';
 
         if (props.message.hasOwnProperty('sentAt')) {
-          ticks = greyTick;
+          ticks = 'checkmark-sharp';
         }
       }
     } else {
       if (props.message.hasOwnProperty('error')) {
-        ticks = errorTick;
+        ticks = 'ios-alert-circle';
       } else {
-        ticks = sendingTick;
+        ticks = 'ellipsis-horizontal-circle';
 
         if (props.message.hasOwnProperty('sentAt')) {
-          ticks = greyTick;
+          ticks = 'checkmark-sharp';
 
           if (props.message.hasOwnProperty('deliveredAt')) {
-            ticks = greyDoubleTick;
+            ticks = 'checkmark-done-sharp';
             if (props.message.hasOwnProperty('readAt')) {
-              ticks = blueDoubleTick;
+              ticks = 0;
             }
           }
         }
@@ -94,10 +96,9 @@ const CometChatReadReceipt = (props) => {
   return (
     <View style={styles.containerStyle}>
       <Text style={styles.msgTimestampStyle}>{timestamp}</Text>
-
-      {ticks ? (
-        <Image source={ticks} alt="time" style={styles.tickImageStyle} />
-      ) : null}
+      {ticks === 0 ? (
+        <Ionicons name="checkmark-done-sharp" size={15} color={'#111BAC'} style={{marginLeft: 5}}/>
+      ) : <Ionicons name={ticks} color={'#FAFAFA'} size={15} style={{marginLeft: 5}}/> }
     </View>
   );
 };

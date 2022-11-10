@@ -7,11 +7,15 @@ import { CometChatUserPresence, CometChatAvatar } from '../../Shared';
 import * as enums from '../../../utils/enums';
 import * as actions from '../../../utils/actions';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Foundation from 'react-native-vector-icons/Foundation';
 import styles from './styles';
 import audioCallIcon from './resources/audioCall.png';
 import videoCallIcon from './resources/videoCall.png';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import detailPaneIcon from './resources/detailpane.png';
 import { logger } from '../../../utils/common';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { CometChatContext } from '../../../utils/CometChatContext';
 class CometChatMessageHeader extends React.Component {
@@ -293,18 +297,22 @@ class CometChatMessageHeader extends React.Component {
       </Text>
     );
 
-    let audioCallBtn = (
-      <TouchableOpacity
-        onPress={() => this.props.actionGenerated(actions.AUDIO_CALL)}
-        style={styles.audioCallContainer}>
-        <Image style={styles.callIcon} source={audioCallIcon} />
-      </TouchableOpacity>
-    );
     let videoCallBtn = (
       <TouchableOpacity
         onPress={() => this.props.actionGenerated(actions.VIDEO_CALL)}
         style={styles.videoCallContainer}>
-        <Image source={videoCallIcon} style={styles.videoIcon} />
+        {/* <FontAwesome size={22} name="video-camera" color="#fff" /> */}
+        <Image source={require('../../../../../../../assets/images/Videovideo.png')} style={{width: 28, height: 28}}/>
+      </TouchableOpacity>
+    );
+
+    let audioCallBtn = (
+      <TouchableOpacity
+        onPress={() => this.props.actionGenerated(actions.AUDIO_CALL)}
+        style={styles.audioCallContainer}>
+        {/* <Foundation size={30} name="telephone" color="#fff" /> */}
+        <Image source={require('../../../../../../../assets/images/Callcall.png')} style={{width: 28, height: 28}}/>
+
       </TouchableOpacity>
     );
 
@@ -347,7 +355,7 @@ class CometChatMessageHeader extends React.Component {
       <TouchableOpacity
         onPress={() => this.props.actionGenerated(actions.VIEW_DETAIL)}
         style={styles.videoCallContainer}>
-        <Image style={styles.callIcon} source={detailPaneIcon} />
+        <Icon size={25} name="ellipsis-horizontal-circle" color="#fff" />
       </TouchableOpacity>
     );
 
@@ -356,37 +364,41 @@ class CometChatMessageHeader extends React.Component {
         <TouchableOpacity
           onPress={() => this.props.actionGenerated(actions.GO_BACK)}
           style={styles.backButtonContainer}>
-          <Icon
-            name="chevron-back-sharp"
+          {/* <MaterialCommunityIcons
+            name="arrow-left"
             size={32}
-            color={this.props.theme.color.blue}
-          />
+            style={{fontWeight: 1}}
+            color={this.props.theme.color.white}
+          /> */}
+          <Image source={require('../../../../../../../assets/images/Leftback.png')} style={{width: 30, height: 30}}/>
         </TouchableOpacity>
         <View style={styles.headerDetailContainer}>
-          <View
+          {/* <View
             style={[
               styles.avatarContainer,
               {
-                backgroundColor: 'rgba(51,153,255,0.25)',
+                backgroundColor: '#fff',
               },
             ]}>
             <CometChatAvatar
               image={{ uri: image }}
               cornerRadius={25}
-              borderColor={this.props.theme.borderColor.primary}
+              borderColor={this.props.theme.borderColor.white}
               borderWidth={0}
               name={userName}
             />
             {presence}
-          </View>
+          </View> */}
           <View style={styles.itemDetailContainer}>
+          <TouchableOpacity onPress={() => this.props.actionGenerated(actions.VIEW_DETAIL)}>
             <Text style={styles.itemNameText} numberOfLines={1}>
               {this.props.item.name}
             </Text>
             {status}
+            </TouchableOpacity>
           </View>
-          {videoCallBtn}
           {audioCallBtn}
+          {videoCallBtn}
           {info}
         </View>
       </View>

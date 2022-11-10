@@ -8,7 +8,7 @@ export default StyleSheet.create({
   msgTimestampStyle: {
     fontSize: 11,
     fontWeight: '500',
-    color: theme.color.helpText,
+    color: '#C0C0C0',
 
     textTransform: 'uppercase',
   },

@@ -35,6 +35,7 @@ const SignIn_Screen = () => {
         ...googleCredential,
       }));
 
+      console.log(googleCredential);
       return auth().signInWithCredential(googleCredential);
     } catch (error) {
       console.log(error);

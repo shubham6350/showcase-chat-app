@@ -79,6 +79,7 @@ class CometChatMessages extends React.PureComponent {
     this.reactionName = props.reaction || 'heart';
     this.theme = { ...theme, ...params.theme };
   }
+  
 
   componentDidMount() {
     this.checkRestrictions();
@@ -86,6 +87,7 @@ class CometChatMessages extends React.PureComponent {
       .getLoggedInUser()
       .then((user) => {
         this.loggedInUser = user;
+        console.log("abcd---------------",user);
       })
       .catch(() => {
          logger('[CometChatMessages] getLoggedInUser error', error);

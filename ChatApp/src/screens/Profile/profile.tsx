@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TouchableOpacity,
@@ -15,20 +15,29 @@ import {
 import Styles from './Style';
 import SignIn_Button from '../../components/Buttons/SignIn';
 import { SafeAreaView } from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import Antdesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { firebase } from '@react-native-firebase/auth';
+// import { CometChatManager } from '../../../utils/controller';
+import * as actions from '../../store/action';
+import { COMETCHAT_CONSTANTS } from '../../CONSTS';
+import CometChatManager from '../../cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/utils/controller';
 var ImagePicker = require('react-native-image-picker');
 
-const Profile_Screen = ({ navigation }: any) => {
+const Profile_Screen = ({ navigation }: any,props: any) => {
+  const data = useSelector(state => state);
+  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
   const [nickName, setNickName] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [email, setEmail] = useState('');
   const [about, setAbout] = useState('');
+  const [uid, setUid] = useState('');
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
   const [imageUrl, setImageUrl] = useState('');
@@ -38,6 +47,19 @@ const Profile_Screen = ({ navigation }: any) => {
   const [fileUri, setFileUri] = useState('');
 
   //select image from device
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid);
+        setUid(user.uid);
+      } else {
+        // User not logged in or has just logged out.
+        navigation.navigate('SignIn_Screen');
+      }
+    });
+  }, [])
+
 
   const chooseImage = () => {
     let options = {
@@ -122,7 +144,7 @@ const Profile_Screen = ({ navigation }: any) => {
       about: about,
       imagerurl: imageUrl,
     };
-    Todoref.add(data)
+    Todoref.doc(uid).set(data)
       .then(() => {
         setName(''),
           setNickName(''),
@@ -131,13 +153,19 @@ const Profile_Screen = ({ navigation }: any) => {
           setAbout(''),
           setFileUri(''),
           Keyboard.dismiss();
-        navigation.navigate('Chat');
+          dispatch(actions.auth(uid, COMETCHAT_CONSTANTS.AUTH_KEY, true))
+        user_chat_login();
       })
       .catch((error) => {
         Alert.alert(error);
       });
   };
 
+  useEffect(() => {
+    if(data.reducer.isLoggedIn){
+      navigation.navigate('Chat');
+    }
+  })
   // sending file to cloud Storage
   const SubmitImage = async () => {
     const uploadUri = fileUri;

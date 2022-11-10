@@ -189,20 +189,22 @@ const CometChatSenderTextMessageBubble = (props) => {
         onLongPress={() => {
           props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
         }}>
-        <View style={style.messageWrapperStyle}>{messageText}</View>
+        <View style={style.messageWrapperStyle}>
+          {messageText}
+          <View style={style.messageInfoWrapperStyle}>
+          <CometChatThreadedMessageReplyCount
+            theme={props.theme}
+            {...props}
+            message={message}
+          />
+          <CometChatReadReceipt
+            theme={props.theme}
+            {...props}
+            message={message}
+          />
+          </View>
+        </View>
       </TouchableWithoutFeedback>
-      <View style={style.messageInfoWrapperStyle}>
-        <CometChatThreadedMessageReplyCount
-          theme={props.theme}
-          {...props}
-          message={message}
-        />
-        <CometChatReadReceipt
-          theme={props.theme}
-          {...props}
-          message={message}
-        />
-      </View>
       <CometChatMessageReactions
         showMessage={props.showMessage}
         theme={props.theme}

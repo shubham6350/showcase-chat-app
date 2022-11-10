@@ -100,6 +100,7 @@ const VSotp = () => {
         .then(console.log('login success'));
       console.log(data);
       Alert.alert('login success');
+      navigation.navigate('Profile');
     } catch (error) {
       console.log('Invalid code');
       Alert.alert('Invalid code');

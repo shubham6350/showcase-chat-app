@@ -32,7 +32,7 @@ const PSAuth = () => {
   async function signInWithPhoneNumber(phoneNumber: string) {
     const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
     setConfirm(confirmation);
-    navigation.navigate('VLotp', {
+    navigation.navigate('VSotp', {
       confirm: confirmation,
       uphone: '+' + countryCode + text,
     });

@@ -41,7 +41,6 @@ const PLAuth = () => {
   const selectedValue = (value: string) => {
     setCountryCode(value);
   };
-
   return (
     <SafeAreaView style={styles.mainContainer}>
       <KeyboardAvoidingView
@@ -49,13 +48,9 @@ const PLAuth = () => {
         style={{ flex: 1 }}
       >
         <View style={styles.container1}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('SignIn_Screen')}
-            style={{ flex: 1 }}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate('SignIn_Screen')}>
             <AntIcon name="arrowleft" color="black" size={20} />
           </TouchableOpacity>
-
           <View style={styles.logoc}>
             <Image
               style={styles.simage}
@@ -94,9 +89,9 @@ const PLAuth = () => {
           </View>
           <View style={styles.bott}>
             <Text style={styles.bottxt}>
-              Don't have an account?{' '}
+              Don't have an Account?
               <Text style={{ color: '#246BFD' }} onPress={() => navigation.navigate('SignUp')}>
-                Sign up
+                Sign Up
               </Text>
             </Text>
           </View>

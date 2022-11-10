@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unused-state */
 import React from 'react';
-import { SafeAreaView, View, ToastAndroid } from 'react-native';
+import { SafeAreaView, View,ToastAndroid } from 'react-native';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 
 import CometChatOutgoingCall from '../../Calls/CometChatOutgoingCall';
@@ -18,12 +18,8 @@ import DropDownAlert from '../../Shared/DropDownAlert';
 class CometChatUserListWithMessages extends React.Component {
   loggedInUser = null;
 
-  removeFocusListener = this.props.navigation.addListener('focus', () =>
-    this.setState({ isActive: true }),
-  );
-  removeBlurListener = this.props.navigation.addListener('blur', () =>
-    this.setState({ isActive: false }),
-  );
+  removeFocusListener = this.props.navigation.addListener('focus', () => this.setState({isActive: true}))
+  removeBlurListener = this.props.navigation.addListener('blur', () => this.setState({isActive: false}))
 
   constructor(props) {
     super(props);
@@ -43,6 +39,7 @@ class CometChatUserListWithMessages extends React.Component {
   }
 
   componentDidMount() {
+   
     if (!Object.keys(this.state.item).length) {
       this.toggleSideBar();
     }
@@ -56,8 +53,8 @@ class CometChatUserListWithMessages extends React.Component {
   }
 
   componentWillUnmount() {
-    this.removeBlurListener();
-    this.removeFocusListener();
+    this.removeBlurListener()
+    this.removeFocusListener()
   }
 
   /**
@@ -404,29 +401,28 @@ class CometChatUserListWithMessages extends React.Component {
             navigation={this.props.navigation}
           />
           {imageView}
-          {this.state.isActive ? (
-            <>
-              <CometChatIncomingCall
-                showMessage={(type, message) => {
-                  this.dropDownAlertRef?.showMessage(type, message);
-                }}
-                theme={this.props.theme}
-                loggedInUser={this.loggedInUser}
-                outgoingCall={this.state.outgoingCall}
-                actionGenerated={this.actionHandler}
-              />
-              <CometChatOutgoingCall
-                theme={this.props.theme}
-                item={this.state.item}
-                type={this.state.type}
-                incomingCall={this.state.incomingCall}
-                outgoingCall={this.state.outgoingCall}
-                loggedInUser={this.loggedInUser}
-                lang={this.state.lang}
-                actionGenerated={this.actionHandler}
-              />
-            </>
-          ) : null}
+          {this.state.isActive ? 
+          <>
+          <CometChatIncomingCall
+            showMessage={(type, message) => {
+              this.dropDownAlertRef?.showMessage(type, message);
+            }}
+            theme={this.props.theme}
+            loggedInUser={this.loggedInUser}
+            outgoingCall={this.state.outgoingCall}
+            actionGenerated={this.actionHandler}
+          /> 
+          <CometChatOutgoingCall
+            theme={this.props.theme}
+            item={this.state.item}
+            type={this.state.type}
+            incomingCall={this.state.incomingCall}
+            outgoingCall={this.state.outgoingCall}
+            loggedInUser={this.loggedInUser}
+            lang={this.state.lang}
+            actionGenerated={this.actionHandler}
+          />
+          </> : null }
           <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
         </View>
       </CometChatContextProvider>
