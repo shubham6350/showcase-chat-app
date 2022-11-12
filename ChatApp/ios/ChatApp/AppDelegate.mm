@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
+
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -15,7 +17,11 @@
 #import <React/RCTSurfacePresenterBridgeAdapter.h>
 #import <ReactCommon/RCTTurboModuleManager.h>
 
+
+
 #import <react/config/ReactNativeConfig.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
+
 
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
@@ -29,6 +35,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 #endif
 
 @implementation AppDelegate
+
+
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -60,6 +68,10 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [RNSplashScreen show];
+  
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                         didFinishLaunchingWithOptions:launchOptions];
+  
   return YES;
 }
 
