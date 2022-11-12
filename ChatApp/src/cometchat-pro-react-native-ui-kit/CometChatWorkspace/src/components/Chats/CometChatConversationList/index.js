@@ -1047,6 +1047,8 @@ class CometChatConversationList extends React.Component {
       });
   };
 
+  
+
   render() {
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
@@ -1054,8 +1056,8 @@ class CometChatConversationList extends React.Component {
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.conversationWrapperStyle}>
-            <View style={styles.headerContainer}></View>
-            {/* {this.listHeaderComponent()} */}
+            {/* {this.loading()} */}
+            {/* <View style={styles.headerContainer}></View> */}
             <SwipeListView
               contentContainerStyle={styles.flexGrow1}
               data={this.state.conversationList}
@@ -1069,6 +1071,8 @@ class CometChatConversationList extends React.Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     paddingLeft: 15,
+                    // backgroundColor:'red',
+                    // height:800,
                   }}>
                   <TouchableOpacity
                     style={{
@@ -1116,6 +1120,8 @@ class CometChatConversationList extends React.Component {
               showsVerticalScrollIndicator={false}
               scrollEnabled
             />
+
+            {/* <View style={styles.headerContainer}></View> */}
           </KeyboardAvoidingView>
           <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
         </SafeAreaView>

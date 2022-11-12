@@ -2,26 +2,33 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { heightRatio, widthRatio } from '../../../utils/consts';
 import theme from '../../../resources/theme';
 export default StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' },
+  container: { flex: 1, 
+  backgroundColor: 'rgba(0,0,0,0.7)'
+ },
   modalWrapper: {
     backgroundColor: 'transparent',
-},
-modalContainer: {  
+  },
+  modalContainer: {
     backgroundColor: 'white',
-    width:'90%',
+    width: '90%',
     paddingVertical: 20,
     borderRadius: 30,
-    elevation: 1
-},
+    elevation: 1,
+  },
   itemLinkStyle: {
     fontSize: 16,
     lineHeight: 20,
     fontWeight: '600',
     marginVertical: 4,
     color: theme.color.primary,
+    // backgroundColor:'red',
   },
   fullWidth: { width: '100%' },
-  listItemContainer: { width: '100%', marginVertical: 6 },
+  listItemContainer: {
+    width: '100%',
+    marginVertical: 6,
+    // backgroundColor: 'yellow',
+  },
   sectionHeaderStyle: {
     margin: 0,
     width: '100%',
@@ -30,20 +37,25 @@ modalContainer: {
     lineHeight: 20,
     textTransform: 'uppercase',
     color: theme.color.helpText,
+    // backgroundColor:'#246BFD',
   },
   headerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     paddingVertical: 19 * heightRatio,
     paddingHorizontal: 16 * widthRatio,
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
+    backgroundColor: '#246BFD',
+    // height:80,
   },
-  closeIcon: { marginRight: 5 },
+  closeIcon: { marginRight: 5,color:'#FFF' },
   detailContainer: { padding: 16 },
   headerTitleStyle: {
     fontWeight: '700',
     fontSize: 20,
+    color:'#FFF',
+    marginLeft:100,
   },
   reactionDetailsContainer: {
     backgroundColor: 'white',
@@ -51,7 +63,7 @@ modalContainer: {
     borderRadius: 20,
     flex: 1,
     overflow: 'hidden',
-    minHeight: Dimensions.get('window').height - 80,
+    minHeight: Dimensions.get('window').height,
   },
   userName: {
     fontSize: 18 * heightRatio,
@@ -72,10 +84,12 @@ modalContainer: {
     padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    // backgroundColor:'red',
   },
   groupDetail: {
     paddingLeft: 8,
     justifyContent: 'center',
     height: 48,
+    // backgroundColor:'red',
   },
 });

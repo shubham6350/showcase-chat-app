@@ -1,9 +1,13 @@
-/* eslint-disable import/no-duplicates */
 import React, { useEffect, useRef, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
-import { View, Text, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { CometChatGroupListWithMessages } from '../Groups';
 import { CometChatUserListWithMessages } from '../Users';
 import { CometChatConversationListWithMessages } from '../Chats';
@@ -14,15 +18,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MCIIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../resources/theme';
 import { heightRatio } from '../../utils/consts';
-import { SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 // import { Image } from 'react-native-svg';
-
 const Tab = createMaterialTopTabNavigator();
-
-function CometChatUI() {
+function CometChatUI({navigation}) {
   const [tabs, setTabs] = useState(null);
   const contextRef = useRef(null);
-
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     checkRestrictions();
   }, []);
@@ -45,8 +48,13 @@ function CometChatUI() {
       isCallListEnabled,
     });
   };
+
+  const User_Click=()=>{
+    setModalVisible(false);
+    navigation.navigate('Users');
+  }
   return (
-    <SafeAreaView style={{ width: '100%', height: '100%' }}>
+    <SafeAreaView style={{ }}>
       <View
         style={{
           height: '10%',
@@ -62,27 +70,71 @@ function CometChatUI() {
             flexDirection: 'row',
             justifyContent: 'space-evenly',
           }}>
-          <View style={{ width: '12%', height: '100%', borderRadius: 12 }}>
+          {/* <View style={{ paddingTop: 4, marginLeft: 5}}>
             <Image
-              style={{ height: '100%', width: '100%' }}
-              source={require('../../../../../../assets/images/App_Logo.png')}
+              style={{ height: 25, width: 25 }}
+              source={require('../../../../../../assets/images/logoo.png')}
             />
-          </View>
-          <View style={{ backgroundColor: '#246BFD', width: '60%' }}>
-            <Text style={{ fontSize: 24, fontWeight: '700', color: '#FFFFFF' }}>
+          </View> */}
+
+          <Modal
+            animationType="none"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TouchableOpacity  onPress={() =>User_Click()} >
+                  <Text style={styles.modalText}>Users</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <Text style={styles.textStyle}>Logout</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          </Modal>
+
+          <View
+            style={{
+              backgroundColor: '#246BFD',
+              width: '70%',
+              flexDirection: 'row',
+              marginLeft: 20,
+            }}>
+            <Image
+              style={{ height: 25, width: 25, marginRight: 15, marginTop: 2 }}
+              source={require('../../../../../../assets/images/logoo.png')}
+            />
+            <Text
+              style={{
+                fontFamily: 'Urbanist-Bold',
+                fontSize: 24,
+                fontWeight: '700',
+                color: '#FFFFFF',
+              }}>
               Logo
             </Text>
           </View>
           <View style={{ backgroundColor: '#246BFD', width: '10%' }}>
             <Ionicons name="search-outline" size={24} color="#FFFFFF" />
           </View>
-          <View style={{ backgroundColor: '#246BFD', width: '10%' }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{ backgroundColor: '#246BFD', width: '10%' }}>
             <Ionicons
               name="ellipsis-horizontal-circle"
               size={24}
               color="#FFFFFF"
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={{ height: '90%', width: '100%' }}>
@@ -91,20 +143,19 @@ function CometChatUI() {
             <Tab.Navigator
               screenOptions={({ route }) => ({
                 tabBarStyle: {
-                  height: 40,
+                  height: 50,
                   backgroundColor: '#246BFD',
                 },
                 tabBarLabelStyle: {
                   // marginTop: 10,
                   fontWeight: '600',
                   textTransform: 'lowercase',
+                  fontFamily: 'Urbanist-Bold',
                   fontSize: 18,
                   color: '#FFF',
                 },
-
                 // tabBarIcon: ({ color }) => {
                 //   let iconName;
-
                 //   if (route.name === 'Chats') {
                 //     return (
                 //       <MCIIcons name="chat" size={25 * heightRatio} color={color} />
@@ -124,7 +175,6 @@ function CometChatUI() {
                 //   } else if (route.name === 'Groups') {
                 //     iconName = 'people';
                 //   }
-
                 //   // You can return any component that you like here!
                 //   return (
                 //     <Ionicons
@@ -143,6 +193,9 @@ function CometChatUI() {
                 labelStyle: { fontSize: 12 },
                 indicatorStyle: {
                   backgroundColor: '#fff',
+                  height: 5,
+                  marginLeft: 12,
+                  width: '28%',
                 },
               }}>
               {tabs.isChatEnabled && (
@@ -159,8 +212,8 @@ function CometChatUI() {
               )} */}
               {tabs.isGroupListEnabled && (
                 <Tab.Screen
-                  // name="Groups"
-                  name="status"
+                  name="Groups"
+                  // name="status"
                   component={CometChatGroupListWithMessages}
                 />
               )}
@@ -174,5 +227,57 @@ function CometChatUI() {
     </SafeAreaView>
   );
 }
-
 export default CometChatUI;
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    // marginTop: 40,
+    // backgroundColor: 'red',
+    // paddingHorizontal:-2,
+  },
+  modalView: {
+    // margin: 25,
+    backgroundColor: 'white',
+    borderRadius: 2,
+    // padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    // marginRight: -1,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    // marginLeft: 150,
+    elevation: 5,
+    height: '25%',
+    width: '40%',
+    justifyContent: 'center',
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#246BFD',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize:20,
+    fontWeight:'700',
+  },
+});

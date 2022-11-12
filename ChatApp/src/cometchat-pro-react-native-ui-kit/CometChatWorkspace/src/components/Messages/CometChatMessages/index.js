@@ -1029,7 +1029,7 @@ class CometChatMessages extends React.PureComponent {
               return (
                 <View
                   style={{
-                    backgroundColor: 'white',
+                    backgroundColor: 'White',
                     height: Dimensions.get('window').height - 80,
                   }}>
                   <CometChatMessageThread

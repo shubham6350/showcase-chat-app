@@ -9,7 +9,8 @@ import {
 export default StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    // backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'red',
   },
   mainContainer: {
     backgroundColor: 'white',

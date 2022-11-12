@@ -8,6 +8,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 64,
+    // marginTop:2,
     paddingHorizontal: 16,
     justifyContent: 'center',
     marginBottom: 8,

@@ -4,7 +4,8 @@ import { widthRatio, heightRatio } from '../../../utils/consts';
 export default StyleSheet.create({
   conversationWrapperStyle: {
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
+    // padding: 2,
   },
   headingContainer: {
     flexDirection: 'row',
@@ -15,7 +16,7 @@ export default StyleSheet.create({
     paddingBottom: 32,
     position: 'relative',
     paddingHorizontal: 22 * widthRatio,
-    backgroundColor:'#5089FF',
+    backgroundColor: '#5089FF',
   },
   contactHeaderCloseStyle: {
     height: 24,
@@ -38,7 +39,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    
+    // position: 'absolute',
   },
   contactMsgTxtStyle: {
     margin: 0,
@@ -57,7 +58,8 @@ export default StyleSheet.create({
     height: 48,
     width: '100%',
     justifyContent: 'center',
+    backgroundColor: 'blue',
   },
-  flexGrow1: { flexGrow: 1 },
+  flexGrow1: { flexGrow: 1, marginTop: 20 },
   deleteText: { color: '#fff' },
 });

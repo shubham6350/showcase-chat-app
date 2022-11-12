@@ -274,12 +274,13 @@ export default class CometChatUserDetails extends React.Component {
         onRequestClose = {() =>{
           this.props.actionGenerated(actions.CLOSE_DETAIL);
         }} >
-        <TouchableOpacity
-          onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
+        <View
+          // onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
           style={style.container}>
           <BottomSheet
             ref={this.sheetRef}
-            snapPoints={[deviceHeight - 80, 0]}
+            snapPoints={[deviceHeight, 0]}
+            // containerHeight={600}
             borderRadius={30}
             initialSnap={0}
             enabledInnerScrolling={false}
@@ -337,7 +338,7 @@ export default class CometChatUserDetails extends React.Component {
               this.props.actionGenerated(actions.CLOSE_DETAIL);
             }}
           />
-        </TouchableOpacity>
+        </View>
         <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
       </Modal>
     );
