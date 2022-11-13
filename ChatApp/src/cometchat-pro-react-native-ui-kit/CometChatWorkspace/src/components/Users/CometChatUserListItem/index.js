@@ -14,10 +14,10 @@ const CometChatUserListItem = (props) => {
       onPress={() => props.clickHandler(props.user)}
       underlayColor={viewTheme.backgroundColor.listUnderlayColor}>
       <View style={style.listItem}>
-        <View style={[style.avatarStyle, { borderRadius: 22 }]}>
+        <View style={[style.avatarStyle, { borderRadius: 30 }]}>
           <CometChatAvatar
             image={{ uri: props.user.avatar }}
-            cornerRadius={22}
+            cornerRadius={25}
             borderColor={viewTheme.color.secondary}
             borderWidth={0}
             name={props.user.name}

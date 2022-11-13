@@ -48,6 +48,7 @@ class CometChatConversationList extends React.Component {
       selectedConversation: undefined,
       showSmallHeader: false,
       isMessagesSoundEnabled: true,
+      messageCount: true,
     };
 
     this.chatListRef = React.createRef();
@@ -432,6 +433,12 @@ class CometChatConversationList extends React.Component {
     }
   };
 
+  setVall = () => {
+    if(!this.state.messageCount){
+      let messageCount = true;
+      this.setState({messageCount});
+    }
+  };
   /**
    * Play audio alert
    * @param
@@ -564,6 +571,54 @@ class CometChatConversationList extends React.Component {
         logger('This is an error in converting message to conversation', error);
         const errorCode = error?.message || 'ERROR';
         this.dropDownAlertRef?.showMessage('error', errorCode);
+      });
+  };
+
+  getConversations = () => {
+    new CometChatManager()
+      .getLoggedInUser()
+      .then((user) => {
+        this.loggedInUser = user;
+        this.ConversationListManager.fetchNextConversation()
+          .then((conversationList) => {
+            if (conversationList.length === 0) {
+              let messageCount = false;
+              this.setState({messageCount})
+              this.decoratorMessage = 'No chats found';
+            }
+            // else{
+            //   let messageCount = false;
+            //   this.setState({messageCount})
+            // }
+            // if(this.state.messageCount){
+            //   let messageCount = false;
+            //   this.setState({messageCount})
+            // }
+            // let messageCount = false;
+              // this.setState({messageCount})
+            this.setState({
+              conversationList: [
+                ...this.state.conversationList,
+                ...conversationList,
+              ],
+            });
+          })
+          .catch((error) => {
+            this.decoratorMessage = 'Error';
+            const errorCode = error?.message || 'ERROR';
+            this.dropDownAlertRef?.showMessage('error', errorCode);
+            logger(
+              '[CometChatConversationList] getConversations fetchNext error',
+              error,
+            );
+          });
+      })
+      .catch((error) => {
+        this.decoratorMessage = 'Error';
+        logger(
+          '[CometChatConversationList] getConversations getLoggedInUser error',
+          error,
+        );
       });
   };
 
@@ -828,41 +883,6 @@ class CometChatConversationList extends React.Component {
    * Retrieve conversation list according to the logged in user
    * @param
    */
-  getConversations = () => {
-    new CometChatManager()
-      .getLoggedInUser()
-      .then((user) => {
-        this.loggedInUser = user;
-        this.ConversationListManager.fetchNextConversation()
-          .then((conversationList) => {
-            if (conversationList.length === 0) {
-              this.decoratorMessage = 'No chats found';
-            }
-            this.setState({
-              conversationList: [
-                ...this.state.conversationList,
-                ...conversationList,
-              ],
-            });
-          })
-          .catch((error) => {
-            this.decoratorMessage = 'Error';
-            const errorCode = error?.message || 'ERROR';
-            this.dropDownAlertRef?.showMessage('error', errorCode);
-            logger(
-              '[CometChatConversationList] getConversations fetchNext error',
-              error,
-            );
-          });
-      })
-      .catch((error) => {
-        this.decoratorMessage = 'Error';
-        logger(
-          '[CometChatConversationList] getConversations getLoggedInUser error',
-          error,
-        );
-      });
-  };
 
   /**
    * header component for conversation list
@@ -900,8 +920,7 @@ class CometChatConversationList extends React.Component {
         <View
           style={{
             // backgroundColor: 'yellow',
-            height: '55%',
-            width: '100%',
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
 
@@ -940,9 +959,9 @@ class CometChatConversationList extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{ width: '80%' }}>
-            <Text style={{ fontWeight: '500' }}>
-              Hichat connects you with family and friends.
+          <View style={{ width: '80%', alignItems: 'center' , marginTop: 10 }}>
+            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Medium' ,justifyContent: 'center'}}>
+              Hi chat connects you with family and friends.
             </Text>
           </View>
         </View>
@@ -959,7 +978,7 @@ class CometChatConversationList extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{ fontWeight: '500' }}>Start chatting now!</Text>
+            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Bold'  }}>Start chatting now!</Text>
           </View>
         </View>
 
@@ -1016,6 +1035,8 @@ class CometChatConversationList extends React.Component {
     }
   };
 
+  // console.log(this.state.conversationList)
+
   /**
    * Handle end reached of conversation list
    * @param
@@ -1038,6 +1059,7 @@ class CometChatConversationList extends React.Component {
         const conversationKey = newConversationList.findIndex(
           (c) => c.conversationId === conversation.conversationId,
         );
+        this.getConversations();
 
         newConversationList.splice(conversationKey, 1);
         this.setState({ conversationList: newConversationList });
@@ -1047,17 +1069,17 @@ class CometChatConversationList extends React.Component {
       });
   };
 
-  
-
   render() {
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
+        {this.state.conversationList.length > 0 ?  
         <SafeAreaView style={{ backgroundColor: '#fff' }}>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={styles.conversationWrapperStyle}>
-            {/* {this.loading()} */}
-            {/* <View style={styles.headerContainer}></View> */}
+            <View style={styles.headerContainer}></View>
+            {/* {this.listHeaderComponent()} */}
+            {/* {this.state.conversationList ?   */}
             <SwipeListView
               contentContainerStyle={styles.flexGrow1}
               data={this.state.conversationList}
@@ -1071,8 +1093,6 @@ class CometChatConversationList extends React.Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     paddingLeft: 15,
-                    // backgroundColor:'red',
-                    // height:800,
                   }}>
                   <TouchableOpacity
                     style={{
@@ -1092,6 +1112,7 @@ class CometChatConversationList extends React.Component {
                       resizeMode="contain"
                       style={{ height: 24 }}
                     />
+                    {true ? this.setVall() :  null}
                     <Text style={styles.deleteText}>Delete</Text>
                   </TouchableOpacity>
                 </View>
@@ -1113,18 +1134,122 @@ class CometChatConversationList extends React.Component {
                   />
                 );
               }}
-              ListEmptyComponent={this.listEmptyContainer}
+              // ListEmptyComponent={this.listEmptyContainer}
               onScroll={this.handleScroll}
               onEndReached={this.endReached}
               onEndReachedThreshold={0.3}
               showsVerticalScrollIndicator={false}
               scrollEnabled
             />
+            </KeyboardAvoidingView>
+          <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+          <View style={{backgroundColor: 'transparent', height: 150,position: 'absolute',zIndex: 1,top: '80%', left: '70%', right: 0, bottom: 0}}>
+            {/* <Text>Test</Text> */}
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Users')}>
+            <Image source={require('../../../../../../../assets/images/newmsg.png')} style={{width: 120, height: 120}} />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+            :
+            <>
+          {this.state.messageCount ? 
+              <SafeAreaView style={{justifyContent: 'center', backgroundColor: 'red', height: '100%', width: '100%' }}>
+             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff'}}>
+             {/* <ActivityIndicator size="large" color="#00ff00" /> */}
+             <Image source={require('../../../../../../../assets/images/ezgif.com-gif-maker.gif')} style={{width: 200, height: 200}} />
+             </View>
+             </SafeAreaView>
+              :
+              <SafeAreaView style={{ backgroundColor: '#fff' }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.conversationWrapperStyle}>
+            <View style={styles.headerContainer}></View>
+            <View style={styles.contactMsgStyle}>
+        <View
+          style={{
+            // backgroundColor: 'yellow',
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
 
-            {/* <View style={styles.headerContainer}></View> */}
+            // marginBottom: 50,
+          }}>
+          <Image
+            style={{ height: 222, width: 218 }}
+            source={require('../../../../../../../assets/images/GroupDFGD.png')}
+          />
+        </View>
+        <View
+          style={{
+            width: '100%',
+            height: '20%',
+            // backgroundColor: 'red',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'yellow',
+              width: '80%',
+              height: '82%',
+            }}>
+            <Text style={{ fontSize: 40, color: '#246BFD', fontWeight: '800', fontFamily: 'Urbanist-Bold'   }}>
+              Welcome! 👋
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            width: '100%',
+            // backgroundColor: 'blue',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{ width: '80%', alignItems: 'center' , marginTop: 10 }}>
+            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Medium' ,justifyContent: 'center'}}>
+              Hi chat connects you with family and friends.
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            width: '100%',
+            // backgroundColor: 'yellow',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              width: '75%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Bold'  }}>Start chatting now!</Text>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Users')}
+          style={{
+            width: '100%',
+            marginTop: 40,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View style={{ width: '80%' }}>
+            <SignIn_Button title="Start new Chat" />
+          </View>
+        </TouchableOpacity>
+      </View> 
           </KeyboardAvoidingView>
           <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
         </SafeAreaView>
+             }
+        </>
+    }
       </CometChatContextProvider>
     );
   }

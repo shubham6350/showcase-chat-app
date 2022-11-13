@@ -4,7 +4,7 @@ import theme from '../../../resources/theme';
 import { COLORS } from '../../../../../../../assets/colors/colors';
 
 export default StyleSheet.create({
-  bottomSheetContainer: { flex: 1,padding: 20 },
+  bottomSheetContainer: { flex: 1,padding: 20,marginBottom: -80 },
   mainContainer: { flexDirection: 'row', padding: 10, alignItems: 'center' },
   plusCircleContainer: { marginRight: 10, marginLeft: 10 },
   plusCircleContainerr: {padding: 10,backgroundColor: COLORS.ALERT_INFO ,borderRadius: 50},

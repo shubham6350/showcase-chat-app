@@ -29,6 +29,7 @@ import CometChatManager from '../../cometchat-pro-react-native-ui-kit/CometChatW
 var ImagePicker = require('react-native-image-picker');
 
 const Profile_Screen = ({ navigation }: any,props: any) => {
+  const [loading, isLoading] = useState(true);
   const data = useSelector(state => state);
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +46,9 @@ const Profile_Screen = ({ navigation }: any,props: any) => {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [fileUri, setFileUri] = useState('');
+  let cc = '';
+
+
 
   //select image from device
 
@@ -165,6 +169,36 @@ const Profile_Screen = ({ navigation }: any,props: any) => {
       navigation.navigate('Chat');
     }
   })
+
+  useEffect(() => {
+    firebase.firestore()
+   .collection("users")
+   .doc(uid)
+   .get() 
+   .then((snapshot) => { 
+     if (snapshot.data()) 
+       {
+        cc = snapshot.data()?.name;
+         if(cc.length > 0){
+          dispatch(actions.auth(uid, COMETCHAT_CONSTANTS.AUTH_KEY, true));
+         }else{
+          console.log("name not provided");
+          if(uid.length > 0){
+            isLoading(false);
+          }
+         }
+       } else {  
+        if(uid != null){
+          console.log("not found");
+          if(uid.length > 0)
+          {
+            isLoading(false);
+          }
+        }
+       } 
+     })
+  }, [uid])
+  
   // sending file to cloud Storage
   const SubmitImage = async () => {
     const uploadUri = fileUri;
@@ -211,6 +245,15 @@ const Profile_Screen = ({ navigation }: any,props: any) => {
     setShow(true);
     setMode(currentMode);
   };
+
+  if(loading) {
+    return (
+         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff'}}>
+             {/* <ActivityIndicator size="large" color="#00ff00" /> */}
+             <Image source={require('../../../assets/images/loadd.gif')} style={{width: 200, height: 200}} />
+         </View>
+    )
+   }
   return (
     <SafeAreaView style={{ padding: 15 }}>
       <Modal

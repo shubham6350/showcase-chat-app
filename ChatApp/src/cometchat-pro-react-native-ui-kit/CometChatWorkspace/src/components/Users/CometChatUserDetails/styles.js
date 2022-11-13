@@ -27,10 +27,11 @@ export default StyleSheet.create({
   headerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     paddingVertical: 19 * heightRatio,
     paddingHorizontal: 16 * widthRatio,
     borderBottomWidth: 1,
+    backgroundColor:'#246BFD',
   },
   headerTitleStyle: {
     fontWeight: '700',
@@ -44,9 +45,9 @@ export default StyleSheet.create({
     minHeight: deviceHeight,
   },
   avatarStyle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     backgroundColor: 'rgba(51,153,255,0.25)',
   },
   userName: {
@@ -59,9 +60,13 @@ export default StyleSheet.create({
     color: theme.color.blue,
   },
   userDetailContainer: {
-    padding: 16,
-    flexDirection: 'row',
+    // padding: 16,
+    // flexDirection: 'row',
+    justifyContent:'space-around',
     alignItems: 'center',
+    // backgroundColor:'red',
+    height:'30%',
+
   },
   userDetail: {
     paddingLeft: 8,

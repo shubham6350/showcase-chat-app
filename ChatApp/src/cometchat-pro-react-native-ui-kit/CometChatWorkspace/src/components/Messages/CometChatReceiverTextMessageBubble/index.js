@@ -18,6 +18,7 @@ import * as enums from '../../../utils/enums';
 import * as actions from '../../../utils/actions';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { CometChatContext } from '../../../utils/CometChatContext';
+
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
@@ -38,17 +39,21 @@ const CometChatReceiverTextMessageBubble = (props) => {
   }
   const context = useContext(CometChatContext);
   const [restrictions, setRestrictions] = useState(null);
+
   useEffect(() => {
     checkRestrictions();
   }, []);
+
   const checkRestrictions = async () => {
     let isLinkPreviewEnabled = context.FeatureRestriction.isLinkPreviewEnabled();
     setRestrictions({ isLinkPreviewEnabled });
   };
+
   /**
    * Handler that parses text and wraps URLs, phone numbers, emails, social handles, hashtags, and more with Text nodes and onPress handlers.
    * @param
    */
+
   const getMessageText = () => {
     return (
       <Autolink
@@ -213,6 +218,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
                   {messageText}
                   <View style={[style.messageInfoWrapperStyle]}>
               <CometChatReadReceipt {...props} message={message} />
+
               <CometChatThreadedMessageReplyCount
                 {...props}
                 message={message}
@@ -231,6 +237,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
           <View style={[style.containerStyle]}>
             {/* <View style={[style.messageInfoWrapperStyle]}>
               <CometChatReadReceipt {...props} message={message} />
+
               <CometChatThreadedMessageReplyCount
                 {...props}
                 message={message}

@@ -389,7 +389,7 @@ export default class ComposerActions extends Component {
         {audio}
         {location}
         {contact}
-        {stickerBtn}
+        {/* {stickerBtn} */}
         </View>
         {/* <View style={{flexDirection: 'row'}}>
         {createPollBtn}

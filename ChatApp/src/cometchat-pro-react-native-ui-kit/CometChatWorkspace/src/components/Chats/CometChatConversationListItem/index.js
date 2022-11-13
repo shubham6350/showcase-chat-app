@@ -32,8 +32,6 @@ class CometChatConversationListItem extends React.Component {
     };
   }
 
-  
-
   componentDidMount() {
     const timestamp = this.getLastMessageTimestamp();
 
@@ -357,9 +355,6 @@ class CometChatConversationListItem extends React.Component {
         />
       );
     }
-
-
-    // console.log(this.props.conversation.unreadMessageCount);
     return (
       <View key={this.props?.conversation?.conversationId}>
         <TouchableOpacity
@@ -398,16 +393,9 @@ class CometChatConversationListItem extends React.Component {
               <Text numberOfLines={1} style={styles.itemNameStyle}>
                 {this.props.conversation.conversationWith.name}
               </Text>
-              {this.state.restrictions?.isUnreadCountEnabled ? (
-                <CometChatBadgeCount
-                  theme={this.props.theme}
-                  count={this.props.conversation.unreadMessageCount}
-                />
-              ) : null}
-
-              {/* <View style={styles.itemLastMsgStyle}>
+              <View style={styles.itemLastMsgStyle}>
                 {lastMessageTimeStamp}
-              </View> */}
+              </View>
             </View>
             <View
               style={{
@@ -421,15 +409,12 @@ class CometChatConversationListItem extends React.Component {
                   this.state.lastMessage}
               </Text>
 
-              {/* {this.state.restrictions?.isUnreadCountEnabled ? (
+              {this.state.restrictions?.isUnreadCountEnabled ? (
                 <CometChatBadgeCount
                   theme={this.props.theme}
                   count={this.props.conversation.unreadMessageCount}
                 />
-              ) : null} */}
-              <View style={styles.itemLastMsgStyle}>
-                {lastMessageTimeStamp}
-              </View>
+              ) : null}
             </View>
           </View>
         </TouchableOpacity>

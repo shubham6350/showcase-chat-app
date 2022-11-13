@@ -29,7 +29,6 @@ import { logger } from '../../../utils/common';
 import DropDownAlert from '../../Shared/DropDownAlert';
 import styles from '../../Shared/CometChatAvatar/styles';
 import { CometChatContext } from '../../../utils/CometChatContext';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ADD_MEMBER = 'addMember';
 const VIEW_MEMBER = 'viewMember';
@@ -806,122 +805,118 @@ export default class CometChatGroupDetails extends React.Component {
     );
 
     return (
-      <SafeAreaView>
-        <View style={style.modalWrapper}>
-          <Modal
-            transparent
-            animated
-            animationType="fade"
-            visible={this.props.open}
-            onRequestClose={() => {
-              this.props.actionGenerated(actions.CLOSE_DETAIL);
-            }}>
-            <TouchableOpacity
-              onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
-              style={style.container}>
-              <BottomSheet
-                ref={this.sheetRef}
-                snapPoints={[deviceHeight, 0]}
-                borderRadius={30}
-                initialSnap={0}
-                enabledInnerScrolling={false}
-                enabledContentTapInteraction
-                overdragResistanceFactor={10}
-                renderContent={() => {
-                  return (
-                    <TouchableHighlight style={{}}>
-                      <View style={style.reactionDetailsContainer}>
-                        <GroupDetailContext.Provider
-                          value={{
-                            memberList: this.state.memberList,
-                            bannedMemberList: this.state.bannedMemberList,
-                            administratorsList: this.state.administratorsList,
-                            moderatorsList: this.state.moderatorsList,
-                            loggedinuser: this.loggedInUser,
-                            item: this.props.item,
-                          }}>
+      <View style={style.modalWrapper}>
+        <Modal
+          transparent
+          animated
+          animationType="fade"
+          visible={this.props.open}
+          onRequestClose={() => {
+            this.props.actionGenerated(actions.CLOSE_DETAIL);
+          }}>
+          <TouchableOpacity
+            onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
+            style={style.container}>
+            <BottomSheet
+              ref={this.sheetRef}
+              snapPoints={[deviceHeight, 0]}
+              borderRadius={30}
+              initialSnap={0}
+              enabledInnerScrolling={false}
+              enabledContentTapInteraction
+              overdragResistanceFactor={10}
+              renderContent={() => {
+                return (
+                  <TouchableHighlight style={{}}>
+                    <View style={style.reactionDetailsContainer}>
+                      <GroupDetailContext.Provider
+                        value={{
+                          memberList: this.state.memberList,
+                          bannedMemberList: this.state.bannedMemberList,
+                          administratorsList: this.state.administratorsList,
+                          moderatorsList: this.state.moderatorsList,
+                          loggedinuser: this.loggedInUser,
+                          item: this.props.item,
+                        }}>
+                        <View
+                          style={[
+                            style.headerStyle,
+                            { borderColor: this.viewTheme.borderColor.primary },
+                          ]}>
+                          <TouchableOpacity
+                            style={style.headerCloseStyle}
+                            onPress={() =>
+                              this.props.actionGenerated(actions.CLOSE_DETAIL)
+                            }>
+                            <Icon
+                              name="arrowleft"
+                              size={24}
+                              color="#FFF"
+                              style={style.closeIcon}
+                            />
+                          </TouchableOpacity>
                           <View
-                            style={[
-                              style.headerStyle,
-                              {
-                                borderColor: this.viewTheme.borderColor.primary,
-                              },
-                            ]}>
-                            <TouchableOpacity
-                              style={style.headerCloseStyle}
-                              onPress={() =>
-                                this.props.actionGenerated(actions.CLOSE_DETAIL)
-                              }>
-                              <Icon
-                                name="arrowleft"
-                                size={24}
-                                color="#000000"
-                                style={style.closeIcon}
-                              />
-                            </TouchableOpacity>
+                            style={{
+                              width: 200,
+                              height: 30,
+                              flexDirection: 'row',
+                              justifyContent: 'space-around',
+                            }}>
                             {/* <Text style={style.headerTitleStyle}>Details</Text> */}
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                // backgroundColor: 'red',
-                                width: 190,
-                                justifyContent: 'space-around',
-                              }}>
-                              <View>
-                                <Icon name="search1" size={25} color="#FFF" />
-                              </View>
-                              <View>
-                                <Icon1 name="call" size={25} color="#FFF" />
-                              </View>
-                              <View>
-                                <Icon1 name="videocam" size={25} color="#FFF" />
-                              </View>
-                              <View>
-                                <Icon1
-                                  name="ellipsis-horizontal-circle-outline"
-                                  size={25}
-                                  color="#FFF"
-                                />
-                              </View>
+                            <View style={{}}>
+                              <Icon name="search1" size={25} color="#FFF" />
+                            </View>
+                            <View>
+                              <Icon1 name="call" size={25} color="#FFF" />
+                            </View>
+                            <View>
+                              <Icon1 name="videocam" size={25} color="#FFF" />
+                            </View>
+                            <View>
+                              <Icon1
+                                name="ellipsis-horizontal-circle-outline"
+                                size={25}
+                                color="#FFF"
+                              />
                             </View>
                           </View>
-                          <View style={styles.groupDetailContainer}>
-                            {avatar}
-                            <View style={styles.groupDetail}>
-                              <View>
-                                <Text style={style.userName}>
-                                  {this.props.item.name}
-                                </Text>
-                              </View>
-                              <Text style={style.statusText} numberOfLines={1}>
-                                {parseInt(this.props.item?.membersCount)}{' '}
-                                Members
+                          {/* <Text style={style.headerTitleStyle}>Details</Text> */}
+                        </View>
+                        <View style={styles.groupDetailContainer}>
+                          {avatar}
+                          <View style={styles.groupDetail}>
+                            <View>
+                              <Text style={style.userName}>
+                                {this.props.item.name}
                               </Text>
                             </View>
+                            <Text style={style.statusText} numberOfLines={1}>
+                              {parseInt(this.props.item?.membersCount)} Members
+                            </Text>
                           </View>
+                        </View>
 
-                          <View style={style.detailContainer}>
-                            {members}
-                            {options}
-                            {sharedMediaView}
-                          </View>
-                          {viewMembers}
-                          {addMembers}
-                          {bannedMembers}
-                        </GroupDetailContext.Provider>
-                      </View>
-                    </TouchableHighlight>
-                  );
-                }}
-                onCloseEnd={() => {
-                  this.props.actionGenerated(actions.CLOSE_DETAIL);
-                }}
-              />
-            </TouchableOpacity>
-            <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
-          </Modal>
-        </View>
-      </SafeAreaView>
+                        <View style={style.detailContainer}>
+                          {members}
+                          {options}
+                          {sharedMediaView}
+                        </View>
+                        {viewMembers}
+                        {addMembers}
+                        {bannedMembers}
+                      </GroupDetailContext.Provider>
+                    </View>
+                  </TouchableHighlight>
+                );
+              }}
+              onCloseEnd={() => {
+                this.props.actionGenerated(actions.CLOSE_DETAIL);
+              }}
+            />
+          </TouchableOpacity>
+          <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+        </Modal>
+      </View>
     );
   }
 }

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Animated, View } from 'react-native';
 import theme from '../../../resources/theme';
 import styles from './styles';
@@ -15,9 +15,6 @@ const CometChatBadgeCount = (props) => {
       useNativeDriver: true,
     }).start();
   }, [fadeAnim]);
-
-  // let c=c+(props.count)
-  // console.log(c);
 
   if (props.count) {
     return (

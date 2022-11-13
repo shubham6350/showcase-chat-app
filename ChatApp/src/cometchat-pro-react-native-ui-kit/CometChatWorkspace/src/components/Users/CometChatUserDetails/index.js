@@ -1,9 +1,17 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Modal, TouchableHighlight } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Modal,
+  TouchableHighlight,
+} from 'react-native';
 import { UserDetailManager } from './controller';
 import * as enums from '../../../utils/enums';
 import theme from '../../../resources/theme';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/AntDesign';
+import Icon1 from 'react-native-vector-icons/Ionicons';
 import {
   CometChatSharedMedia,
   CometChatAvatar,
@@ -157,7 +165,7 @@ export default class CometChatUserDetails extends React.Component {
     let avatar = (
       <View style={style.avatarStyle}>
         <CometChatAvatar
-          cornerRadius={32}
+          // cornerRadius={3}
           borderColor={theme.color.secondary}
           borderWidth={1}
           image={{ uri: this.props.item.avatar }}
@@ -271,16 +279,15 @@ export default class CometChatUserDetails extends React.Component {
         animated
         animationType="fade"
         visible={this.props.open}
-        onRequestClose = {() =>{
+        onRequestClose={() => {
           this.props.actionGenerated(actions.CLOSE_DETAIL);
-        }} >
-        <View
-          // onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
+        }}>
+        <TouchableOpacity
+          onPress={() => this.props.actionGenerated(actions.CLOSE_DETAIL)}
           style={style.container}>
           <BottomSheet
             ref={this.sheetRef}
             snapPoints={[deviceHeight, 0]}
-            // containerHeight={600}
             borderRadius={30}
             initialSnap={0}
             enabledInnerScrolling={false}
@@ -289,48 +296,79 @@ export default class CometChatUserDetails extends React.Component {
             renderContent={() => {
               return (
                 <TouchableHighlight>
-                <View style={style.reactionDetailsContainer}>
-                  <View
-                    style={[
-                      style.headerStyle,
-                      { borderColor: this.viewTheme.borderColor.primary },
-                    ]}>
-                    <TouchableOpacity
-                      style={style.headerCloseStyle}
-                      onPress={() =>
-                        this.props.actionGenerated(actions.CLOSE_DETAIL)
-                      }>
-                      <Icon
-                        name="keyboard-arrow-left"
-                        size={24}
-                        color="#000000"
-                        style={{ marginRight: 5 }}
-                      />
-                    </TouchableOpacity>
-                    <Text style={style.headerTitleStyle}>Details</Text>
-                  </View>
-                  <View style={style.userDetailContainer}>
-                    {avatar}
-                    <View style={style.userDetail}>
-                      <View>
-                        <Text style={style.userName}>
-                          {this.props.item.name}
-                        </Text>
+                  <View style={style.reactionDetailsContainer}>
+                    <View
+                      style={[
+                        style.headerStyle,
+                        { borderColor: this.viewTheme.borderColor.primary },
+                      ]}>
+                      <TouchableOpacity
+                        style={style.headerCloseStyle}
+                        onPress={() =>
+                          this.props.actionGenerated(actions.CLOSE_DETAIL)
+                        }>
+                        <Icon
+                          name="arrowleft"
+                          size={25}
+                          color="#FFF"
+                          style={{ marginRight: 5 }}
+                        />
+                      </TouchableOpacity>
+                      <View style={{width:200,height:30,flexDirection:'row',justifyContent:'space-around'}}  >
+                        {/* <Text style={style.headerTitleStyle}>Details</Text> */}
+                        <View style={{}} >
+                          <Icon 
+                          name='search1'
+                          size={25}
+                          color='#FFF'
+                          />
+                        </View>
+                        <View>
+                          <Icon1
+                          name='call'
+                          size={25}
+                          color='#FFF'
+                          />
+                        </View>
+                        <View>
+                          <Icon1
+                          name='videocam'
+                          size={25}
+                          color='#FFF'
+                          />
+                        </View>
+                        <View>
+                          <Icon1
+                          name='ellipsis-horizontal-circle-outline'
+                          size={25}
+                          color='#FFF'
+                          />
+                        </View>
                       </View>
-                      {this.props.item && this.props.item.blockedByMe ? null : (
-                        <Text style={style.statusText} numberOfLines={1}>
-                          {this.state.status}
-                        </Text>
-                      )}
+                    </View>
+                    <View style={style.userDetailContainer}>
+                      {avatar}
+                      <View style={style.userDetail}>
+                        <View>
+                          <Text style={style.userName}>
+                            {this.props.item.name}
+                          </Text>
+                        </View>
+                        {this.props.item &&
+                        this.props.item.blockedByMe ? null : (
+                          <Text style={style.statusText} numberOfLines={1}>
+                            {this.state.status}
+                          </Text>
+                        )}
+                      </View>
+                    </View>
+                    <View style={style.optionsContainer}>
+                      {action}
+                      {blockUserView}
+
+                      {sharedMediaView}
                     </View>
                   </View>
-                  <View style={style.optionsContainer}>
-                    {action}
-                    {blockUserView}
-
-                    {sharedMediaView}
-                  </View>
-                </View>
                 </TouchableHighlight>
               );
             }}
@@ -338,7 +376,7 @@ export default class CometChatUserDetails extends React.Component {
               this.props.actionGenerated(actions.CLOSE_DETAIL);
             }}
           />
-        </View>
+        </TouchableOpacity>
         <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
       </Modal>
     );

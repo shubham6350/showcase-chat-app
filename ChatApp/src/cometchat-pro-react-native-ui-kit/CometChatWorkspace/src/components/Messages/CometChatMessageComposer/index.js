@@ -626,6 +626,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       }
     }
   };
+  
 
   takePhoto = async (mediaType = 'photo') => {
     try {
@@ -705,6 +706,18 @@ export default class CometChatMessageComposer extends React.PureComponent {
       disabled = true;
     }
 
+    let stickerViewer = null;
+    if (this.state.stickerViewer) {
+      stickerViewer = (
+        <CometChatStickerKeyboard
+          theme={this.props.theme}
+          item={this.props.item}
+          type={this.props.type}
+          actionGenerated={this.actionHandler}
+        />
+      );
+    }
+
     let liveReactionBtn = null;
     if (
       Object.prototype.hasOwnProperty.call(
@@ -738,7 +751,8 @@ export default class CometChatMessageComposer extends React.PureComponent {
         style={style.plusCircleContainer}
         disabled={disabled}
         onPress={() => {
-           this.setState({ composerActionsVisible: true });
+          //  this.setState({ composerActionsVisible: true });
+          this.toggleStickerPicker();
         }}>
         <Feather size={20} name="smile" color="rgba(0,0,0,0.35)" />
       </TouchableOpacity>
@@ -757,7 +771,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       <TouchableOpacity
         style={style.plusCircleContainer}
         disabled={disabled}
-        onPress={() => this.pickDocument()}>
+        onPress={() => {this.setState({ composerActionsVisible: true });}}>
         <Entypo size={20} name="attachment" color="rgba(0,0,0,0.35)" />
       </TouchableOpacity>
       <TouchableOpacity
@@ -923,17 +937,17 @@ export default class CometChatMessageComposer extends React.PureComponent {
       smartReplyPreview: false;
     }
 
-    let stickerViewer = null;
-    if (this.state.stickerViewer) {
-      stickerViewer = (
-        <CometChatStickerKeyboard
-          theme={this.props.theme}
-          item={this.props.item}
-          type={this.props.type}
-          actionGenerated={this.actionHandler}
-        />
-      );
-    }
+    // let stickerViewer = null;
+    // if (this.state.stickerViewer) {
+    //   stickerViewer = (
+    //     <CometChatStickerKeyboard
+    //       theme={this.props.theme}
+    //       item={this.props.item}
+    //       type={this.props.type}
+    //       actionGenerated={this.actionHandler}
+    //     />
+    //   );
+    // }
 
     const createPoll = (
       <CometChatCreatePoll
