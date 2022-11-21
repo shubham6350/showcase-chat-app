@@ -24,7 +24,8 @@ export default StyleSheet.create({
 
     flexDirection: 'row',
     alignItems: 'center',
-    height: 64 * heightRatio,
+    height: 100 * heightRatio,
+    // backgroundColor:'green',
   },
   avatarContainer: {
     alignSelf: 'center',
@@ -32,6 +33,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 16 * widthRatio,
+    // backgroundColor:'red',
   },
   userDetailsContainer: {
     marginLeft: 16 * widthRatio,
@@ -47,10 +49,11 @@ export default StyleSheet.create({
     color: '#349afe',
   },
   avatarStyle: {
-    width: 40,
-    height: 40,
+    width: 80,
+    height: 80,
     borderColor: 'green',
     marginTop: 10,
+    // borderRadius:100,
   },
   infoItemsWrapper: {
     borderColor: 'green',
@@ -76,10 +79,35 @@ export default StyleSheet.create({
 
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent:'space-evenly',
+    // backgroundColor:'red',
   },
   infoItemText: {
     fontSize: 14,
     color: theme.color.primary,
     marginLeft: 8,
+  },
+  logout_text: {
+    color: 'red',
+  },
+  Logout: {
+    // backgroundColor: 'green',
+    flexDirection: 'row',
+    alignItems: 'center',
+    width:'83%'
+    // justifyContent:'space-evenly',
+  },
+  Icon: {
+    width: '10%',
+    alignItems:'flex-start'
+    // backgroundColor:'yellow',
+  },
+  text: {
+    width: '75%',
+    // backgroundColor:'green',
+  },
+  forward_Icon: {
+    width: '10%',
+    // backgroundColor:'pink'
   },
 });

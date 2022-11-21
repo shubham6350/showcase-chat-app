@@ -53,26 +53,28 @@ const App = () => {
     if (Platform.OS === 'android') {
       setDefaultFontFamily();
     }
-    const getPermissions = async () => {
-      if (Platform.OS === 'android') {
-        let granted = await PermissionsAndroid.requestMultiple([
+
+    getPermissions();
+  }, []);
+
+  const getPermissions = async () => {
+    if (Platform.OS === 'android') {
+      let granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ]);
+      if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+        granted = await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.CAMERA,
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
           PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         ]);
-        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          granted = await PermissionsAndroid.requestMultiple([
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-            PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          ]);
-        }
       }
-    };
-    getPermissions();
-  }, []);
+    }
+  };
 
   const appID = COMETCHAT_CONSTANTS.APP_ID;
   const region = COMETCHAT_CONSTANTS.REGION;
@@ -80,10 +82,9 @@ const App = () => {
     .subscribePresenceForAllUsers()
     .setRegion(region)
     .build();
-  CometChat.init(appID, appSetting).then(
-    () => {
-      console.log('Initialization completed successfully');
-      // You can now call login function.
+  CometChat.init(appID, appSetting).then(() => {
+    console.log('Initialization completed successfully');
+    // You can now call login function.
 
     //   const authKey = COMETCHAT_CONSTANTS.AUTH_KEY;
     //   const uid = 'user1';
@@ -100,8 +101,7 @@ const App = () => {
     // (error) => {
     //   console.log('Initialization failed with error:', error);
     //   // Check the reason for error and take appropriate action.
-    }
-  );
+  });
 
   return (
     <Provider store={store}>

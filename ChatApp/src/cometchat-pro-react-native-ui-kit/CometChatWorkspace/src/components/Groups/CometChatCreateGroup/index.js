@@ -10,11 +10,19 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   TextInput,
+  Image,
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import theme from '../../../resources/theme';
 
+import { CometChatManager } from '../../../utils/controller';
+import { AddMembersManager } from '../CometChatAddGroupMemberList/controller';
+import CometChatAddGroupMemberListItem from '../CometChatAddGroupMemberListItem';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon1 from 'react-native-vector-icons/AntDesign';
 import * as actions from '../../../utils/actions';
 import * as enums from '../../../utils/enums';
 import { logger } from '../../../utils/common';
@@ -24,6 +32,7 @@ import { color } from 'react-native-reanimated';
 
 const closeIcon = <Icon name="close" style={style.modalCloseStyle} />;
 class CometChatCreateGroup extends React.Component {
+  loggedInUser = null;
   static contextType = CometChatContext;
   constructor(props) {
     super(props);
@@ -35,13 +44,41 @@ class CometChatCreateGroup extends React.Component {
       type: 'Select group type',
       password: '',
       restrictions: null,
+      users_List: [],
+      membersToAdd: [],
+      grouplist: [],
+      createGroup: false,
     };
 
     this.sheetRef = React.createRef(null);
   }
 
+  // componentDidMount() {
+  //   this.checkRestrictions();
+  // }
+
   componentDidMount() {
+    new CometChatManager()
+      .getLoggedInUser()
+      .then((user) => {
+        this.loggedInUser = user;
+      })
+      .catch((error) => {
+        logger('[CometChatGroupListWithMessages] getLoggedInUser error', error);
+      });
+
     this.checkRestrictions();
+    if (this.props?.friendsOnly) {
+      this.friendsOnly = this.props.friendsOnly;
+    }
+
+    this.setState({ grouplist: [] });
+
+    this.AddMembersManager = new AddMembersManager();
+    this.AddMembersManager.initializeMembersRequest().then(() => {
+      this.getUsers();
+      this.AddMembersManager.attachListeners(this.userUpdated);
+    });
   }
 
   checkRestrictions = async () => {
@@ -175,6 +212,16 @@ class CometChatCreateGroup extends React.Component {
     this.setState({ password: feedback });
   };
 
+  createGroupActionHandler = (action, group) => {
+    // console.log(group, '=======');
+    if (action === actions.GROUP_CREATED) {
+      const groupList = [group, ...this.state.grouplist];
+
+      this.handleClick(group);
+      this.setState({ grouplist: groupList, createGroup: false });
+    }
+  };
+
   /**
    * handles the change in groupName TextInputField
    * @param feedback: TextInput's value
@@ -205,8 +252,9 @@ class CometChatCreateGroup extends React.Component {
    * @param
    * @returns boolean: true if validation is passed else false.
    */
-  itemClicked = (item, type) => {
-    this.setState({ item: { ...item }, type, viewDetailScreen: false }, () => {
+  itemClicked = async (item, type) => {
+    // console.log(item,'uuuuuu');
+    this.setState({ item: { ...item }, type, viewDetailScreen: false },() => {
       this.navigateToMessageListScreen(item, type);
     });
   };
@@ -219,69 +267,68 @@ class CometChatCreateGroup extends React.Component {
         item: { ...item },
         theme: this.theme,
         tab: this.state.tab,
-        loggedInUser: this.loggedInUser,
-        callMessage: this.state.callMessage,
+        loggedInUser: this.props.loggedInUser,
+        callMessage: this.props.callMessage,
         actionGenerated: this.actionHandler,
-        composedThreadMessage: this.state.composedThreadMessage,
+        composedThreadMessage: this.props.composedThreadMessage,
       },
     );
   };
 
   handleClick = (group) => {
+    // console.log(group,'yyyyyyy');
     //handle click here
     if (!this.itemClicked) return;
 
-    if (group.hasJoined === false) {
-      if (this.state.restrictions?.isJoinLeaveGroupsEnabled === false) {
-        return false;
-      }
-      if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
-        this.setState({
-          showPasswordScreen: true,
-          guid: group.guid,
-          groupType: group.type,
+    // if (group.hasJoined === false) {
+    //   if (this.state.restrictions?.isJoinLeaveGroupsEnabled === false) {
+    //     return false;
+    //   }
+    //   if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
+    //     this.setState({
+    //       showPasswordScreen: true,
+    //       guid: group.guid,
+    //       groupType: group.type,
+    //     });
+    //   }
+
+    if (group.type === CometChat.GROUP_TYPE.PUBLIC) {
+      CometChat.joinGroup(group.guid, group.type, '')
+        .then((response) => {
+          const groups = [...this.state.grouplist];
+          if (typeof response === 'object') {
+            this.dropDownAlertRef?.showMessage(
+              'success',
+              'Group Joined Successfully',
+            );
+          } else {
+            this.dropDownAlertRef?.showMessage('error', 'Failed to join group');
+          }
+          const groupKey = groups.findIndex((g) => g.guid === group.guid);
+          if (groupKey > -1) {
+            const groupObj = groups[groupKey];
+            const newGroupObj = {
+              ...groupObj,
+              ...response,
+              scope: CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
+            };
+
+            groups.splice(groupKey, 1, newGroupObj);
+            this.setState({ grouplist: groups, selectedGroup: newGroupObj });
+
+            this.itemClicked(newGroupObj, CometChat.RECEIVER_TYPE.GROUP);
+          }
+        })
+        .catch((error) => {
+          const errorCode = error?.message || 'ERROR';
+          this.dropDownAlertRef?.showMessage('error', errorCode);
+          logger('Group joining failed with exception:', error);
         });
-      }
-      if (group.type === CometChat.GROUP_TYPE.PUBLIC) {
-        CometChat.joinGroup(group.guid, group.type, '')
-          .then((response) => {
-            const groups = [...this.state.grouplist];
-            if (typeof response === 'object') {
-              this.dropDownAlertRef?.showMessage(
-                'success',
-                'Group Joined Successfully',
-              );
-            } else {
-              this.dropDownAlertRef?.showMessage(
-                'error',
-                'Failed to join group',
-              );
-            }
-            const groupKey = groups.findIndex((g) => g.guid === group.guid);
-            if (groupKey > -1) {
-              const groupObj = groups[groupKey];
-              const newGroupObj = {
-                ...groupObj,
-                ...response,
-                scope: CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
-              };
-
-              groups.splice(groupKey, 1, newGroupObj);
-              this.setState({ grouplist: groups, selectedGroup: newGroupObj });
-
-              this.itemClicked(newGroupObj, CometChat.RECEIVER_TYPE.GROUP);
-            }
-          })
-          .catch((error) => {
-            const errorCode = error?.message || 'ERROR';
-            this.dropDownAlertRef?.showMessage('error', errorCode);
-            logger('Group joining failed with exception:', error);
-          });
-      }
-    } else {
-      this.setState({ selectedGroup: group });
-      this.props.onItemClick(group, CometChat.RECEIVER_TYPE.GROUP);
     }
+    // } else {
+    //   this.setState({ selectedGroup: group });
+    //   this.props.onItemClick(group, CometChat.RECEIVER_TYPE.GROUP);
+    // }
   };
 
   validate = () => {
@@ -324,16 +371,148 @@ class CometChatCreateGroup extends React.Component {
     }
   };
 
+  getUsers = () => {
+    new CometChatManager().getLoggedInUser().then(() => {
+      this.AddMembersManager.fetchNextUsers().then((userList) => {
+        // console.log(userList,'kkkkk');
+
+        this.setState({
+          users_List: userList,
+        });
+
+        // console.log(this.state.users_List,'kjfnsdkjfndsjkfns');
+
+        // const filteredUserList = userList.filter((user) => {
+        //   const found = this.context.memberList.find(
+        //     (member) => user.uid === member.uid,
+        //   );
+
+        //   const foundBanned = this.context.bannedMemberList.find(
+        //     (member) => user.uid === member.uid,
+        //   );
+        //   if (found || foundBanned) {
+        //     return false;
+        //   }
+        //   return true;
+        // });
+
+        //   if (filteredUserList.length === 0) {
+        //     this.decoratorMessage = 'No users found';
+        //   }
+
+        //   this.setState({
+        //     userList: [...this.state.userList, ...userList],
+        //     filteredList: [...this.state.filteredList, ...filteredUserList],
+        //   });
+
+        // })
+        // .catch((error) => {
+        //   const errorCode = error?.message || 'ERROR';
+        //   this.dropDownAlertRef?.showMessage('error', errorCode);
+        //   this.decoratorMessage = 'Error';
+        //   logger(
+        //     '[CometChatAddGroupMemberList] getUsers fetchNext error',
+        //     error,
+        //   );
+      });
+    });
+    // .catch((error) => {
+    //   this.decoratorMessage = 'Error';
+    //   logger(
+    //     '[CometChatAddGroupMemberList] getUsers getLoggedInUser error',
+    //     error,
+    //   );
+    // });
+  };
+
+  membersUpdated = (user, userState) => {
+    if (userState) {
+      const members = [...this.state.membersToAdd];
+      members.push(user);
+      this.setState({ membersToAdd: [...members] });
+    } else {
+      const membersToAdd = [...this.state.membersToAdd];
+      const indexFound = membersToAdd.findIndex(
+        (member) => member.uid === user.uid,
+      );
+      if (indexFound > -1) {
+        membersToAdd.splice(indexFound, 1);
+        this.setState({ membersToAdd: [...membersToAdd] });
+      }
+    }
+  };
+
+  updateMembers = async (guid, group) => {
+    // console.log(group,'tttt');
+    try {
+      const membersList = [];
+      this.state.membersToAdd.forEach((newMember) => {
+        const newMemberAdded = new CometChat.GroupMember(
+          newMember.uid,
+          CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
+        );
+
+        membersList.push(newMemberAdded);
+
+        console.log(membersList, 'ashdvsahjvdfkadhsjfvkhdajsfvhdajks');
+
+        newMemberAdded.type = 'add';
+      });
+
+      if (membersList.length) {
+        const MembersToAdd = [];
+        // this.props.close();
+
+        console.log('ksh 6');
+        await CometChat.addMembersToGroup(guid, membersList, [])
+          .then((response) => {
+            console.log(response, 'response');
+            console.log('ksh 7');
+            if (Object.keys(response).length) {
+              for (const member in response) {
+                if (response[member] === 'success') {
+                  const found = this.state.users_List.find(
+                    (user) => user.uid === member,
+                  );
+                  found.scope = CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT;
+
+                  MembersToAdd.push(found);
+                  console.log(found.scope, 'found1');
+                }
+              }
+              // console.log(MembersToAdd, 'pppppppp');
+              // this.props.navigation.navigate('Chat');
+              // this.props.clickHandler(group);
+
+              console.log('ksh 8');
+            }
+          })
+          .catch((error) => {
+            const errorCode = error?.message || 'ERROR';
+            this.dropDownAlertRef?.showMessage('error', errorCode);
+            logger('addMembersToGroup failed with exception:', error);
+          });
+        // console.log(membersToAdd,'gggggggg');
+      }
+      console.log('ksh 9');
+    } catch (error) {
+      const errorCode = error?.message || 'ERROR';
+      this.dropDownAlertRef?.showMessage('error', errorCode);
+      logger('121', error);
+    }
+  };
+
   /**
    * handles the creation of new group based on validations.
    * @param
    */
 
-  createGroup = () => {
+  createGroup = async () => {
     // try {
     //   if (!this.validate()) {
     //     return false;
     //   }
+    this.state.uploading = true;
 
     const groupType = CometChat.GROUP_TYPE.PUBLIC;
 
@@ -342,21 +521,24 @@ class CometChatCreateGroup extends React.Component {
     const name = this.state.name.trim();
     let type = groupType;
 
+    console.log('ksh 1');
+
     const group = new CometChat.Group(guid, name, type, password);
-    console.log(group);
-    CometChat.createGroup(group).then(() => {
-      // this.setState({
-      //   error: null,
-      //   name: '',
-      //   type: '',
-      //   password: '',
-      //   passwordInput: '',
-      console.log('Group created');
-    });
+    let incomingGroup = await CometChat.createGroup(group);
+    if (incomingGroup !== null) {
+      console.log('ksh 3');
+      await this.updateMembers(guid, group);
+      console.log('ksh 4');
+    }
+   
+    this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
+
     // console.log('group created');
-    // this.props.actionGenerated(actions.GROUP_CREATED, incomingGroup);
+
     // this.handleClick(group);
-    this.props.navigation.navigate('Chat')
+    // setTimeout(() => {
+    //   this.itemClicked(group, groupType);
+    // }, 5000);
     //     })
     //     .catch((error) => {
     //       logger('Group creation failed with exception:', error);
@@ -399,64 +581,211 @@ class CometChatCreateGroup extends React.Component {
     }
 
     return (
-      <Modal
-        transparent
-        animated
-        animationType="fade"
-        visible={this.props.open}>
-        <View style={style.container}>
-          <View style={style.innerContainer}>
-            <View style={style.modalWrapperStyle}>
-              <SafeAreaView>
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    Keyboard.dismiss();
+      // <Modal
+      //   transparent
+      //   animated
+      //   animationType="fade"
+      //   visible={this.props.open}>
+      //   <View style={style.container}>
+      //     <View style={style.innerContainer}>
+      //       <View style={style.modalWrapperStyle}>
+      //         <SafeAreaView>
+      //           <TouchableWithoutFeedback
+      //             onPress={() => {
+      //               Keyboard.dismiss();
+      //             }}>
+      <SafeAreaView>
+        <View style={style.modalBodyStyle}>
+          <View style={style.modalTableStyle}>
+            <View style={style.modalHeader}>
+              <View style={{ width: '10%' }}>
+                <TouchableOpacity
+                  onPress={() => this.props.navigation.navigate('Chat')}>
+                  <Icon name="arrow-back" size={28} color="#fff" />
+                </TouchableOpacity>
+
+                {/* <Image   style={{height:80,width:80}} source={require('../../../../../../../assets/images/dummy.png')}  /> */}
+              </View>
+              <View
+                style={{
+                  width: '70%',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                }}>
+                <Text style={style.tableCaptionStyle}>New Group</Text>
+              </View>
+              <View style={{ width: '10%' }}>
+                <Icon1 name="search1" size={28} color="#fff" />
+              </View>
+            </View>
+            <View style={style.tableBodyStyle}>
+              {/* <View>
+                <Text style={style.tableErrorStyle}>{this.state.error}</Text>
+              </View> */}
+
+              <View
+                style={{
+                  backgroundColor: '#FAFAFA',
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  padding: 10,
+                }}>
+                <View
+                  style={{
+                    width: '15%',
+                    height: '100%',
+                    flexDirection: 'row',
                   }}>
-                  <View style={style.modalBodyStyle}>
-                    <View style={style.modalTableStyle}>
-                      <View style={style.modalHeader}>
-                        <Text style={style.tableCaptionStyle}>
-                          Create Group
-                        </Text>
-                        <TouchableOpacity
-                          style={style.closeBtn}
-                          onPress={() => {
-                            // this.props.close();
-                            this.props.navigation.navigate('Chat');
-                          }}>
-                          {closeIcon}
-                        </TouchableOpacity>
-                      </View>
-                      <View style={style.tableBodyStyle}>
-                        <View>
-                          <Text style={style.tableErrorStyle}>
-                            {this.state.error}
-                          </Text>
-                        </View>
-                        <View>
-                          <TextInput
-                            autoCompleteType="off"
-                            style={[
-                              style.inputStyle,
-                              {
-                                // backgroundColor:
-                                // this.theme.backgroundColor.grey,
-                                // color: this.theme.color.helpText,
-                                // borderColor: this.theme.color.grey,
-                                backgroundColor: 'grey',
-                                color: '#FFF',
-                                borderColor: 'grey',
-                              },
-                            ]}
-                            placeholder="Enter group name"
-                            type="text"
-                            onChangeText={(value) => {
-                              this.nameChangeHandler(value);
-                            }}
-                            value={this.state.name}
-                          />
-                        </View>
-                        {/* <View>
+                  <Image
+                    style={{ height: 60, width: 60 }}
+                    source={require('../../../../../../../assets/images/dummy.png')}
+                  />
+                  <TouchableOpacity style={{}}>
+                    <Image
+                      style={{
+                        height: 12,
+                        width: 12,
+                        marginTop: 40,
+                        marginRight: 30,
+                        marginLeft: -10,
+                      }}
+                      source={require('../../../../../../../assets/images/Edit.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ width: '80%' }}>
+                  <View>
+                    <TextInput
+                      autoCompleteType="off"
+                      style={[
+                        style.inputStyle,
+                        {
+                          // backgroundColor:
+                          // this.theme.backgroundColor.grey,
+                          // color: this.theme.color.helpText,
+                          // borderColor: this.theme.color.grey,
+                          backgroundColor: '#E4E8EA',
+                          // color: '#FFF',
+                          borderColor: '',
+                          height: 40,
+                          borderRadius: 10,
+                        },
+                      ]}
+                      placeholder="Type group subject here..."
+                      type="text"
+                      onChangeText={(value) => {
+                        this.nameChangeHandler(value);
+                      }}
+                      value={this.state.name}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  height: '5%',
+                  width: '100%',
+                  alignItems: 'flex-start',
+                  justifyContent: 'center',
+                  backgroundColor: '#FAFAFA',
+                }}>
+                <View style={{ justifyContent: 'flex-start' }}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: '400',
+                      color: '#424242',
+                      marginLeft: 15,
+                    }}>
+                    Add Participants
+                  </Text>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  backgroundColor: 'transparent',
+                  width: '100%',
+                  height: '100%',
+                }}>
+                <FlatList
+                  keyExtractor={(item, index) => item.uid + '_' + index}
+                  data={this.state.users_List}
+                  renderItem={({ item }) => {
+                    const chr = item.name[0].toUpperCase();
+                    let firstLetter = null;
+                    // if (chr !== currentLetter) {
+                    //   currentLetter = chr;
+                    //   firstLetter = currentLetter;
+                    // }
+                    return (
+                      <React.Fragment key={item.uid}>
+                        <CometChatAddGroupMemberListItem
+                          // theme={this.theme}
+                          // firstLetter={firstLetter}
+                          // loggedinuser={group.loggedinuser}
+                          user={item}
+                          membersToAdd={this.state.membersToAdd}
+                          // test={this.state.users_List}
+                          // members={group.memberList}
+                          changed={this.membersUpdated}
+                        />
+                      </React.Fragment>
+                    );
+                  }}
+                  ListEmptyComponent={this.listEmptyContainer}
+                  ItemSeparatorComponent={this.itemSeparatorComponent}
+                  onScroll={this.handleScroll}
+                  onEndReached={this.endReached}
+                  onEndReachedThreshold={0.3}
+                  showsVerticalScrollIndicator={false}
+                />
+
+                {/* <Text>skjvjksd</Text> */}
+
+                <View
+                  style={{
+                    height: 70,
+                    backgroundColor: 'red',
+                    width: '25%',
+                    marginLeft: '75%',
+                    // marginTop: 50,
+                  }}>
+                  <View style={style.groupButtonContainer}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#246BFD',
+                        height: 60,
+                        width: 60,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 50,
+                        marginBottom: 280,
+                      }}
+                      // style={[
+                      //   style.groupButtonWrapper,
+                      //   {
+                      //     backgroundColor: '#246BFD',
+                      //   },
+                      // ]}
+                      onPress={() => this.createGroup()}>
+                      {/* <Text
+                    style={[
+                      style.btnText,
+                      // { color: this.theme.color.white },
+                      { color: '#FFF' },
+                    ]}>
+                    Create
+                  </Text> */}
+                      <Icon name="check" size={28} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              {/* <View>
                           <Picker
                             style={style.inputPickerStyle}
                             onValueChange={(feedback) => {
@@ -492,37 +821,18 @@ class CometChatCreateGroup extends React.Component {
                           </Picker>
                         </View>
                         {password} */}
-                        <View style={style.groupButtonContainer}>
-                          <TouchableOpacity
-                            style={[
-                              style.groupButtonWrapper,
-                              {
-                                // backgroundColor:
-                                //   this.theme.backgroundColor.blue,
-                                backgroundColor: 'blue',
-                              },
-                            ]}
-                            onPress={() => this.createGroup()}>
-                            <Text
-                              style={[
-                                style.btnText,
-                                // { color: this.theme.color.white },
-                                { color: '#FFF' },
-                              ]}>
-                              Create
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </SafeAreaView>
             </View>
           </View>
         </View>
-        <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
-      </Modal>
+      </SafeAreaView>
+
+      //         </TouchableWithoutFeedback>
+      //       </SafeAreaView>
+      //     </View>
+      //   </View>
+      // </View>
+      // <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+      // </Modal>
     );
   }
 }

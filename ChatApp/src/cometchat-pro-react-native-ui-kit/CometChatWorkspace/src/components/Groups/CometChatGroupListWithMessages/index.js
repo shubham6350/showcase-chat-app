@@ -716,6 +716,9 @@ class CometChatGroupListWithMessages extends React.Component {
             actionGenerated={this.actionHandler}
             groupToDelete={this.state.groupToDelete}
             navigation={this.props.navigation}
+            loggedInUser={this.loggedInUser}
+            callMessage={this.state.callMessage}
+            composedThreadMessage={this.state.composedThreadMessage}
           />
           {imageView}
           {this.state.isActive ?

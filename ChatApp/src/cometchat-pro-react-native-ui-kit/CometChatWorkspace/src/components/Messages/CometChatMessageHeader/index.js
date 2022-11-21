@@ -50,12 +50,15 @@ class CometChatMessageHeader extends React.Component {
       await this.context.FeatureRestriction.isTypingIndicatorsEnabled();
     let isOneOnOneVideoCallEnabled =
       await this.context.FeatureRestriction.isOneOnOneVideoCallEnabled();
+    let isGroupAudioCallEnabled =
+      await this.context.FeatureRestriction.isGroupAudioCallEnabled();
     this.setState({
       restrictions: {
         isGroupVideoCallEnabled,
         isOneOnOneAudioCallEnabled,
         isTypingIndicatorsEnabled,
         isOneOnOneVideoCallEnabled,
+        isGroupAudioCallEnabled,
       },
     });
   };
@@ -136,7 +139,10 @@ class CometChatMessageHeader extends React.Component {
           status =
             'Yesterday, ' + hours + ':' + minutes + ' ' + ampm.toUpperCase();
         } else {
-          const month = String(messageTimestamp.getMonth()+1).padStart(2, '0');
+          const month = String(messageTimestamp.getMonth() + 1).padStart(
+            2,
+            '0',
+          );
           const day = String(messageTimestamp.getDate()).padStart(2, '0');
           const year = messageTimestamp.getFullYear();
           status = day + '/' + month + '/' + year;
@@ -291,6 +297,8 @@ class CometChatMessageHeader extends React.Component {
       userName = this.props.item.name;
     }
 
+    // console.log(this.state.restrictions?.isGroupAudioCallEnabled, 'kkkkkkkkkk');
+
     let status = (
       <Text style={styles.statusText} numberOfLines={1}>
         {this.state.status}
@@ -302,7 +310,11 @@ class CometChatMessageHeader extends React.Component {
         onPress={() => this.props.actionGenerated(actions.VIDEO_CALL)}
         style={styles.videoCallContainer}>
         {/* <FontAwesome size={22} name="video-camera" color="#fff" /> */}
-        <Image source={require('../../../../../../../assets/images/Videovideo.png')} style={{width: 28, height: 28}}/>
+
+        <Image
+          source={require('../../../../../../../assets/images/Videovideo.png')}
+          style={{ width: 28, height: 28 }}
+        />
       </TouchableOpacity>
     );
 
@@ -311,15 +323,17 @@ class CometChatMessageHeader extends React.Component {
         onPress={() => this.props.actionGenerated(actions.AUDIO_CALL)}
         style={styles.audioCallContainer}>
         {/* <Foundation size={30} name="telephone" color="#fff" /> */}
-        <Image source={require('../../../../../../../assets/images/Callcall.png')} style={{width: 28, height: 28}}/>
-
+        <Image
+          source={require('../../../../../../../assets/images/Callcall.png')}
+          style={{ width: 28, height: 28 }}
+        />
       </TouchableOpacity>
     );
 
     if (
       this.props.item.blockedByMe === true ||
-      this.props.audioCall === false ||
-      this.props.type === CometChat.ACTION_TYPE.TYPE_GROUP
+      this.props.audioCall === false
+      // this.props.type === CometChat.ACTION_TYPE.TYPE_GROUP
     ) {
       audioCallBtn = null;
     }
@@ -335,8 +349,10 @@ class CometChatMessageHeader extends React.Component {
       presence = null;
     }
     if (
-      this.props.type === CometChat.ACTION_TYPE.TYPE_USER &&
-      this.state.restrictions?.isOneOnOneAudioCallEnabled === false
+      (this.props.type === CometChat.ACTION_TYPE.TYPE_USER &&
+        this.state.restrictions?.isOneOnOneAudioCallEnabled === false) ||
+      (this.props.type === CometChat.ACTION_TYPE.TYPE_GROUP &&
+        this.state.restrictions?.isGroupAudioCallEnabled === false)
     ) {
       audioCallBtn = null;
     }
@@ -370,7 +386,10 @@ class CometChatMessageHeader extends React.Component {
             style={{fontWeight: 1}}
             color={this.props.theme.color.white}
           /> */}
-          <Image source={require('../../../../../../../assets/images/Leftback.png')} style={{width: 30, height: 30}}/>
+          <Image
+            source={require('../../../../../../../assets/images/Leftback.png')}
+            style={{ width: 30, height: 30 }}
+          />
         </TouchableOpacity>
         <View style={styles.headerDetailContainer}>
           {/* <View
@@ -390,11 +409,12 @@ class CometChatMessageHeader extends React.Component {
             {presence}
           </View> */}
           <View style={styles.itemDetailContainer}>
-          <TouchableOpacity onPress={() => this.props.actionGenerated(actions.VIEW_DETAIL)}>
-            <Text style={styles.itemNameText} numberOfLines={1}>
-              {this.props.item.name}
-            </Text>
-            {status}
+            <TouchableOpacity
+              onPress={() => this.props.actionGenerated(actions.VIEW_DETAIL)}>
+              <Text style={styles.itemNameText} numberOfLines={1}>
+                {this.props.item.name}
+              </Text>
+              {status}
             </TouchableOpacity>
           </View>
           {audioCallBtn}

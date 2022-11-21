@@ -176,7 +176,7 @@ export default class CometChatUserDetails extends React.Component {
         !this.state.restrictions?.isUserPresenceEnabled ? null : (
           <CometChatUserPresence
             status={this.state.status}
-            style={{ top: 35 }}
+            style={{ top: 95 }}
             cornerRadius={9}
             borderColor={theme.borderColor.white}
             borderWidth={2}
@@ -366,7 +366,8 @@ export default class CometChatUserDetails extends React.Component {
                       {action}
                       {blockUserView}
 
-                      {sharedMediaView}
+                     
+                     {sharedMediaView}
                     </View>
                   </View>
                 </TouchableHighlight>

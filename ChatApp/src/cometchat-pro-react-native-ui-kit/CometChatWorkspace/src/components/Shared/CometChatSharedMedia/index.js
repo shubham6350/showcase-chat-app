@@ -336,7 +336,7 @@ export default class CometChatSharedMedia extends React.Component {
               color: currentTheme.color.helpText,
             },
           ]}>
-          Shared Media
+          Media, Links, & Documents
         </Text>
         <View style={[styles.sectionContentStyle]}>
           <View style={styles.mediaBtnStyle}>

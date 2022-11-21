@@ -29,6 +29,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
+   
   },
   backText: {
     fontSize: 20,
@@ -39,12 +40,16 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    // backgroundColor:'red',
   },
   audioCallContainer: {
     paddingHorizontal: 8,
+    
   },
   videoCallContainer: {
     paddingHorizontal: 8,
+    // backgroundColor:'green',
+    
   },
   callIcon: {
     height: 24,

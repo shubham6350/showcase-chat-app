@@ -12,13 +12,18 @@ const CometChatAddGroupMemberListItem = (props) => {
   const viewTheme = { ...theme, ...props.theme };
 
   const [checked, setChecked] = useState(() => {
+    // console.log(props.test, 'llllllll');
     const found = props.membersToAdd.find(
       (member) => member.uid === props.user.uid,
     );
-    const value = !!found;
 
+    
+
+    const value = !!found;
     return value;
   });
+
+  // console.log(props.membersToAdd,'llll');
 
   /**
    * handles if the participant has to be added or not in the group.
@@ -28,6 +33,7 @@ const CometChatAddGroupMemberListItem = (props) => {
   const handleCheck = () => {
     const value = checked !== true;
     setChecked(value);
+    // console.log(value,'uuu');
     props.changed(props.user, value);
   };
 

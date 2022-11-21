@@ -188,7 +188,7 @@ function CometChatUI() {
                 />
               )}
               {tabs.isUserSettingsEnabled && (
-                <Tab.Screen name="More" component={CometChatUserProfile} />
+                <Tab.Screen name="Profile" component={CometChatUserProfile} />
               )}
             </Tab.Navigator>
           ) : null}

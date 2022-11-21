@@ -20,17 +20,18 @@ import {
 import { connect } from 'react-redux';
 import { CometChatCreateGroup } from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/components/Groups';
 import { StatusBar } from 'react-native';
+import CometChatAddGroupMemberList from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/components/Groups/CometChatAddGroupMemberList/index.js';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = (props) => {
   return (
     <NavigationContainer>
-      <StatusBar
-      backgroundColor="#246BFD"
-      barStyle="dark-content"
-      />
-      <Stack.Navigator headerMode="none" initialRouteName={props.isLoggedIn ? 'Chat' : 'Welcome_Screen'}>
+      <StatusBar backgroundColor="#246BFD" barStyle="dark-content" />
+      <Stack.Navigator
+        headerMode="none"
+        initialRouteName={props.isLoggedIn ? 'Chat' : 'Welcome_Screen'}
+      >
         <Stack.Screen
           name="Welcome_Screen"
           component={WelcomeUI}
@@ -137,18 +138,25 @@ const StackNavigator = (props) => {
           }}
         />
         <Stack.Screen
-         name="Create_Group" 
-         component={CometChatCreateGroup}
-         options={{
-          headerShown: false,
-        }}
+          name="Create_Group"
+          component={CometChatCreateGroup}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Add_Member"
+          component={CometChatAddGroupMemberList}
+          options={{
+            headerShown: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-const mapStateToProps = ({reducer}) => {
+const mapStateToProps = ({ reducer }) => {
   return {
     loading: reducer.loading,
     error: reducer.error,

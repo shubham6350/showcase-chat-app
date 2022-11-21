@@ -23,6 +23,7 @@ export default StyleSheet.create({
   mediaBtnStyle: {
     borderRadius: 8,
     backgroundColor: 'rgba(20, 20, 20, 0.08)',
+    // backgroundColor:'#246BFD',
     width: '100%',
     padding: 2,
     marginVertical: 6,
@@ -34,12 +35,13 @@ export default StyleSheet.create({
     fontWeight: '500',
     lineHeight: 18,
     textAlign: 'center',
+    
   },
   activeButtonStyle: {
     width: '33.33%',
     alignSelf: 'flex-start',
     padding: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#246BFD',
     borderRadius: 7,
     textAlign: 'center',
     shadowColor: '#000',

@@ -24,8 +24,12 @@ const readAt = 'readAt';
 class CometChatConversationListWithMessages extends React.Component {
   loggedInUser = null;
 
-  removeFocusListener = this.props.navigation.addListener('focus', () => this.setState({isActive: true}))
-  removeBlurListener = this.props.navigation.addListener('blur', () => this.setState({isActive: false}))
+  removeFocusListener = this.props.navigation.addListener('focus', () =>
+    this.setState({ isActive: true }),
+  );
+  removeBlurListener = this.props.navigation.addListener('blur', () =>
+    this.setState({ isActive: false }),
+  );
 
   constructor(props) {
     super(props);
@@ -47,7 +51,7 @@ class CometChatConversationListWithMessages extends React.Component {
       imageView: null,
       groupMessage: {},
       lastMessage: {},
-      isActive: true
+      isActive: true,
     };
 
     this.theme = { ...theme, ...this.props.theme };
@@ -73,13 +77,14 @@ class CometChatConversationListWithMessages extends React.Component {
   }
 
   componentWillUnmount() {
-    this.removeBlurListener()
-    this.removeFocusListener()
+    this.removeBlurListener();
+    this.removeFocusListener();
   }
 
   checkRestrictions = async () => {
     let context = this.contextProviderRef.state;
-    let isCallActionMessagesEnabled = await context.FeatureRestriction.isCallActionMessagesEnabled();
+    let isCallActionMessagesEnabled =
+      await context.FeatureRestriction.isCallActionMessagesEnabled();
     this.setState({ isCallActionMessagesEnabled });
   };
 
@@ -280,10 +285,12 @@ class CometChatConversationListWithMessages extends React.Component {
    * Handle initiating an audio call
    * @param
    */
+
   audioCall = () => {
     try {
       let receiverId;
       let receiverType;
+     
       if (this.state.type === 'user') {
         receiverId = this.state.item.uid;
         receiverType = CometChat.RECEIVER_TYPE.USER;
@@ -292,7 +299,9 @@ class CometChatConversationListWithMessages extends React.Component {
         receiverType = CometChat.RECEIVER_TYPE.GROUP;
       }
 
-      CometChatManager.call(receiverId, receiverType, CometChat.CALL_TYPE.AUDIO)
+      console.log(receiverId,receiverType,'');
+      
+      CometChatManager.call(receiverId,receiverType, CometChat.CALL_TYPE.AUDIO)
         .then((call) => {
           this.appendCallMessage(call);
           this.state.isActive ? this.setState({ outgoingCall: call }) : null;
@@ -500,13 +509,13 @@ class CometChatConversationListWithMessages extends React.Component {
   appendCallMessage = (call) => {
     this.setState({ callMessage: call }, () => {
       CometChat.CometChatHelper.getConversationFromMessage(call)
-      .then(conversation => {
-        const {conversationWith, conversationType} = conversation
-        this.itemClicked(conversationWith, conversationType);
-      })
-      .catch(err => {
-        logger(err)
-      })
+        .then((conversation) => {
+          const { conversationWith, conversationType } = conversation;
+          this.itemClicked(conversationWith, conversationType);
+        })
+        .catch((err) => {
+          logger(err);
+        });
     });
   };
 
@@ -597,7 +606,7 @@ class CometChatConversationListWithMessages extends React.Component {
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
         <View style={{}}>
-          <View style={{}}>
+          <View style={{ backgroundColor: 'red' }}>
             <CometChatConversationList
               theme={this.theme}
               item={this.state.item}
@@ -625,8 +634,8 @@ class CometChatConversationListWithMessages extends React.Component {
               outgoingCall={this.state.outgoingCall}
             />
           ) : null}
-          {this.state.isActive ?
-            (<CometChatOutgoingCall
+          {this.state.isActive ? (
+            <CometChatOutgoingCall
               theme={this.theme}
               item={this.state.item}
               type={this.state.type}
@@ -634,7 +643,8 @@ class CometChatConversationListWithMessages extends React.Component {
               outgoingCall={this.state.outgoingCall}
               loggedInUser={this.loggedInUser}
               actionGenerated={this.actionHandler}
-            />) : null}
+            />
+          ) : null}
 
           <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
 

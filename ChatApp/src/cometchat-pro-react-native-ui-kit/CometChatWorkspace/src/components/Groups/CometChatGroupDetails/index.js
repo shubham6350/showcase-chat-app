@@ -522,6 +522,7 @@ export default class CometChatGroupDetails extends React.Component {
   addParticipants = (members, triggerUpdate = true) => {
     try {
       const memberList = [...this.state.memberList, ...members];
+      console.log(memberList,'List');
 
       this.setState({
         memberList,

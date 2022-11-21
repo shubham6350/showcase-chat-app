@@ -6,6 +6,7 @@ export {
 export {
   CometChatUserList,
   CometChatUserListWithMessages,
+  CometChatMedia,
 } from './components/Users';
 export { default as CometChatUI } from './components/CometChatUI';
 export { CometChatMessages } from './components/Messages';

@@ -1102,7 +1102,7 @@ class CometChatConversationList extends React.Component {
                       position: 'absolute',
                       top: 0,
                       width: 75,
-                      backgroundColor: 'red',
+                      backgroundColor: '#246BFD',
                       right: 0,
                       maxHeight: 64,
                     }}
