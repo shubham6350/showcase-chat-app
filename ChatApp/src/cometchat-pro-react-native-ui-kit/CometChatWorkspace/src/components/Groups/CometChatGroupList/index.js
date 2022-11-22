@@ -416,7 +416,7 @@ class CometChatGroupList extends React.Component {
 
   handleClick = (group) => {
 
-    // console.log(group,'???????');
+    console.log(group,'???????');
     //handle click here
     if (!this.props.onItemClick) return;
 
@@ -604,7 +604,7 @@ class CometChatGroupList extends React.Component {
    */
 
   createGroupActionHandler = (action, group) => {
-    console.log(group,'=======');
+    // console.log(group,'=======');
     if (action === actions.GROUP_CREATED) {
       const groupList = [group, ...this.state.grouplist];
 
@@ -881,6 +881,7 @@ class CometChatGroupList extends React.Component {
                 itemClick={this.props.onItemClick}
                 loggedInUser={this.props.loggedInUser}
                 callMessage={this.props.callMessage}
+                // actionGenerated1={this.props.actionGenerated}
                 composedThreadMessage={this.props.composedThreadMessage}
               />
               {passwordScreen}

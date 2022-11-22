@@ -37,17 +37,35 @@ class CometChatCreateGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // callMessage: {},
       error: null,
       passwordInput: false,
       name: '',
-      type: 'Select group type',
+      type: 'groups',
       password: '',
       restrictions: null,
       users_List: [],
       membersToAdd: [],
-      grouplist: [],
+      // grouplist: [],
       createGroup: false,
+      item: {},
+      grouplist: [],
+
+      groupToDelete: {},
+      groupToLeave: {},
+      groupToUpdate: {},
+      threadMessageView: false,
+      threadMessageType: null,
+      threadMessageItem: {},
+      threadMessageParent: {},
+      composedThreadMessage: {},
+      incomingCall: null,
+      outgoingCall: null,
+      callMessage: {},
+      sidebarView: false,
+      imageView: null,
+      groupMessage: {},
+      ongoingDirectCall: false,
+      isActive: true,
     };
 
     this.sheetRef = React.createRef(null);
@@ -56,6 +74,8 @@ class CometChatCreateGroup extends React.Component {
   // componentDidMount() {
   //   this.checkRestrictions();
   // }
+
+  
 
   componentDidMount() {
     new CometChatManager()
@@ -103,6 +123,21 @@ class CometChatCreateGroup extends React.Component {
     }
   }
 
+  callInitiated = (message) => {
+    this.appendCallMessage(message);
+  };
+
+  /**
+   * On outgoing call end
+   * @param
+   */
+
+  outgoingCallEnded = (message) => {
+    this.setState({ outgoingCall: null, incomingCall: null }, () => {
+      this.appendCallMessage(message);
+    });
+  };
+
   actionHandler = (action, item, count, ...otherProps) => {
     switch (action) {
       case actions.BLOCK_USER:
@@ -139,7 +174,7 @@ class CometChatCreateGroup extends React.Component {
         this.leaveGroup(item, ...otherProps);
         break;
       case actions.MEMBERS_UPDATED:
-        this.updateMembersCount(item, count);
+        this.updateMembersCount(item, this.state.membersToAdd.length);
         break;
       case actions.VIEW_MESSAGE_THREAD:
         this.viewMessageThread(item);
@@ -213,13 +248,15 @@ class CometChatCreateGroup extends React.Component {
   };
 
   createGroupActionHandler = (action, group) => {
-    // console.log(group, '=======');
+    console.log(group, '=======');
     if (action === actions.GROUP_CREATED) {
       const groupList = [group, ...this.state.grouplist];
 
-      this.handleClick(group);
+      // this.handleClick(group);
+      this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
       this.setState({ grouplist: groupList, createGroup: false });
     }
+    console.log(this.state.grouplist,'uuuuuu');
   };
 
   /**
@@ -252,14 +289,14 @@ class CometChatCreateGroup extends React.Component {
    * @param
    * @returns boolean: true if validation is passed else false.
    */
-  itemClicked = async (item, type) => {
-    // console.log(item,'uuuuuu');
-    this.setState({ item: { ...item }, type, viewDetailScreen: false },() => {
+  itemClicked = (item, type) => {
+    this.setState({ item: { ...item }, type, viewDetailScreen: false }, () => {
       this.navigateToMessageListScreen(item, type);
     });
   };
 
   navigateToMessageListScreen = (item, type) => {
+    // console.log(this.callMessage,'oooooo');
     this.props.navigation.navigate(
       enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES,
       {
@@ -267,10 +304,10 @@ class CometChatCreateGroup extends React.Component {
         item: { ...item },
         theme: this.theme,
         tab: this.state.tab,
-        loggedInUser: this.props.loggedInUser,
-        callMessage: this.props.callMessage,
+        loggedInUser: this.loggedInUser,
+        callMessage: this.callMessage,
         actionGenerated: this.actionHandler,
-        composedThreadMessage: this.props.composedThreadMessage,
+        composedThreadMessage: this.composedThreadMessage,
       },
     );
   };
@@ -454,7 +491,7 @@ class CometChatCreateGroup extends React.Component {
 
         membersList.push(newMemberAdded);
 
-        console.log(membersList, 'ashdvsahjvdfkadhsjfvkhdajsfvhdajks');
+        // console.log(membersList, 'ashdvsahjvdfkadhsjfvkhdajsfvhdajks');
 
         newMemberAdded.type = 'add';
       });
@@ -512,7 +549,6 @@ class CometChatCreateGroup extends React.Component {
     //   if (!this.validate()) {
     //     return false;
     //   }
-    this.state.uploading = true;
 
     const groupType = CometChat.GROUP_TYPE.PUBLIC;
 
@@ -530,8 +566,10 @@ class CometChatCreateGroup extends React.Component {
       await this.updateMembers(guid, group);
       console.log('ksh 4');
     }
-   
-    this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
+
+    this.createGroupActionHandler(actions.GROUP_CREATED,incomingGroup)
+
+    // this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
 
     // console.log('group created');
 
@@ -547,6 +585,455 @@ class CometChatCreateGroup extends React.Component {
     // } catch (error) {
     //   logger(error);
     // }
+  };
+
+  updateThreadMessage = (message, action) => {
+    if (
+      this.state.threadMessageView === false ||
+      message.id !== this.state.threadMessageParent.id
+    ) {
+      return false;
+    }
+
+    if (action === 'delete') {
+      this.setState({
+        threadMessageParent: { ...message },
+        threadMessageView: false,
+      });
+    } else {
+      this.setState({ threadMessageParent: { ...message } });
+    }
+  };
+
+  /**
+   * block users by logged in user.
+   * @param
+   */
+
+  blockUser = () => {
+    try {
+      const usersList = [this.state.item.uid];
+      CometChatManager.blockUsers(usersList)
+        .then((response) => {
+          if (response) {
+            this.dropDownAlertRef?.showMessage('success', 'Blocked User');
+            this.setState({ item: { ...this.state.item, blockedByMe: true } });
+          } else {
+            this.dropDownAlertRef?.showMessage('error', 'Failed to block user');
+          }
+        })
+        .catch((error) => {
+          const errorCode = error?.message || 'ERROR';
+          this.dropDownAlertRef?.showMessage('error', errorCode);
+          logger('Blocking user fails with error', error);
+        });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * unblock users by logged in user.
+   * @param
+   */
+
+  unblockUser = () => {
+    try {
+      const usersList = [this.state.item.uid];
+      CometChatManager.unblockUsers(usersList)
+        .then((response) => {
+          if (response) {
+            this.dropDownAlertRef?.showMessage('success', 'Unblocked user');
+            this.setState({ item: { ...this.state.item, blockedByMe: false } });
+          } else {
+            this.dropDownAlertRef?.showMessage(
+              'error',
+              'Failed to unblock user',
+            );
+          }
+        })
+        .catch((error) => {
+          const errorCode = error?.message || 'ERROR';
+          this.dropDownAlertRef?.showMessage('error', errorCode);
+          logger('unblocking user fails with error', error);
+        });
+    } catch (error) {
+      const errorCode = error?.message || 'ERROR';
+      this.dropDownAlertRef?.showMessage('error', errorCode);
+      logger(error);
+    }
+  };
+
+  /**
+   * handles audio call to a user/group.
+   * @param
+   */
+
+  audioCall = () => {
+    try {
+      let receiverId;
+      let receiverType;
+      if (this.state.type === CometChat.RECEIVER_TYPE.USER) {
+        receiverId = this.state.item.uid;
+        receiverType = CometChat.RECEIVER_TYPE.USER;
+      } else if (this.state.type === CometChat.RECEIVER_TYPE.GROUP) {
+        receiverId = this.state.item.guid;
+        receiverType = CometChat.RECEIVER_TYPE.GROUP;
+      }
+
+      CometChatManager.call(receiverId, receiverType, CometChat.CALL_TYPE.AUDIO)
+        .then((call) => {
+          this.appendCallMessage(call);
+          this.setState({ outgoingCall: call });
+        })
+        .catch((error) => {
+          logger('Call initialization failed with exception:', error);
+        });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * handles video call to a user/group.
+   * @param
+   */
+
+  videoCall = (flag) => {
+    try {
+      let receiverId;
+      let receiverType;
+      if (this.state.type === CometChat.RECEIVER_TYPE.GROUP) {
+        this.setState({ ongoingDirectCall: flag });
+
+        return;
+      }
+      receiverId = this.state.item.uid;
+      receiverType = CometChat.RECEIVER_TYPE.USER;
+
+      CometChatManager.call(receiverId, receiverType, CometChat.CALL_TYPE.VIDEO)
+        .then((call) => {
+          this.appendCallMessage(call);
+          this.setState({ outgoingCall: call });
+        })
+        .catch((error) => {
+          logger('Call initialization failed with exception:', error);
+        });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  toggleSideBar = () => {
+    const { sidebarView } = this.state;
+    this.setState({ sidebarView: !sidebarView });
+  };
+
+  /**
+   * toggle viewDetailScreen
+   * @param
+   */
+
+  toggleDetailView = () => {
+    const viewDetail = !this.state.viewDetailScreen;
+    this.setState({ viewDetailScreen: viewDetail, threadMessageView: false });
+  };
+
+  /**
+   * handles deletion of group
+   * @param group: group object
+   */
+
+  deleteGroup = (group) => {
+    this.setState({
+      groupToDelete: group,
+      item: {},
+      type: CometChat.RECEIVER_TYPE.GROUP,
+      viewDetailScreen: false,
+    });
+  };
+
+  /**
+   * handles the updation when logged in user leaves the group
+   * @param group: group object
+   */
+
+  leaveGroup = (group) => {
+    this.setState({
+      groupToLeave: group,
+      item: {},
+      type: CometChat.RECEIVER_TYPE.GROUP,
+      viewDetailScreen: false,
+    });
+  };
+
+  /**
+   * updation of member count of group.
+   * @param item:item object
+   * @param count: member count
+   */
+
+  updateMembersCount = (item, count) => {
+    const group = { ...this.state.item, membersCount: count };
+    this.setState({ item: group, groupToUpdate: group });
+  };
+
+  /**
+   * handles the updation of group based on key
+   * @param key: action name
+   * @param message: message object
+   * @param group: group object
+   * @param options: options object for member
+   */
+
+  groupUpdated = (message, key, group, options) => {
+    try {
+      switch (key) {
+        case enums.GROUP_MEMBER_BANNED:
+        case enums.GROUP_MEMBER_KICKED: {
+          if (options.user.uid === this.loggedInUser.uid) {
+            this.setState({
+              item: {},
+              type: CometChat.RECEIVER_TYPE.GROUP,
+              viewDetailScreen: false,
+            });
+          }
+          break;
+        }
+        case enums.GROUP_MEMBER_SCOPE_CHANGED: {
+          if (options.user.uid === this.loggedInUser.uid) {
+            const newObj = { ...this.state.item, scope: options.scope };
+            this.setState({
+              item: newObj,
+              type: CometChat.RECEIVER_TYPE.GROUP,
+              viewDetailScreen: false,
+            });
+          }
+          break;
+        }
+        default:
+          break;
+      }
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * Close thread messages, updation of viewDetailScreen
+   * @param
+   */
+
+  closeThreadMessages = () => {
+    this.setState({ viewDetailScreen: false, threadMessageView: false });
+  };
+
+  /**
+   * View message thread via parentMessage
+   * @param parentMessage: message object
+   */
+  viewMessageThread = (parentMessage) => {
+    const message = { ...parentMessage };
+    const threadItem = { ...this.state.item };
+    this.setState({
+      threadMessageView: true,
+      threadMessageParent: message,
+      threadMessageItem: threadItem,
+      threadMessageType: this.state.type,
+      viewDetailScreen: false,
+    });
+  };
+
+  /**
+   * Sets composedThreadMessage via composed message param.
+   * @param composedMessage: message object
+   */
+
+  onThreadMessageComposed = (composedMessage) => {
+    // console.log(composedMessage,'99999');
+    try {
+      if (this.state.type !== this.state.threadMessageType) {
+        return false;
+      }
+
+      if (
+        (this.state.threadMessageType === CometChat.RECEIVER_TYPE.GROUP &&
+          this.state.item.guid !== this.state.threadMessageItem.guid) ||
+        (this.state.threadMessageType === CometChat.RECEIVER_TYPE.USER &&
+          this.state.item.uid !== this.state.threadMessageItem.uid)
+      ) {
+        return false;
+      }
+
+      const message = { ...composedMessage };
+      this.setState({ composedThreadMessage: message });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * Handles the incoming call when user hits accept
+   * @param call
+   */
+
+  acceptIncomingCall = (call) => {
+    this.setState({ incomingCall: call });
+
+    const type = call.receiverType;
+    const id =
+      type === CometChat.RECEIVER_TYPE.USER ? call.sender.uid : call.receiverId;
+
+    CometChat.getConversation(id, type)
+      .then((conversation) => {
+        this.itemClicked(conversation.conversationWith, type);
+      })
+      .catch((error) => {
+        logger('error while fetching a conversation', error);
+      });
+  };
+
+  /**
+   * handles the imcoming call when user hits reject
+   * @param incomingCallMessage: incomingCallMessage object
+   * @param rejectedCallMessage: rejectedCallMessage object
+   */
+
+  rejectedIncomingCall = (incomingCallMessage, rejectedCallMessage) => {
+    try {
+      let { receiverType } = incomingCallMessage;
+      let receiverId =
+        receiverType === CometChat.RECEIVER_TYPE.USER
+          ? incomingCallMessage.sender.uid
+          : incomingCallMessage.receiverId;
+
+      if (
+        Object.prototype.hasOwnProperty.call(incomingCallMessage, 'readAt') ===
+        false
+      ) {
+        CometChat.markAsRead(incomingCallMessage);
+      }
+
+      const { item, type } = this.state;
+
+      receiverType = rejectedCallMessage.receiverType;
+      receiverId = rejectedCallMessage.receiverId;
+
+      if (
+        (type === CometChat.RECEIVER_TYPE.GROUP &&
+          receiverType === CometChat.RECEIVER_TYPE.GROUP &&
+          receiverId === item.guid) ||
+        (type === CometChat.RECEIVER_TYPE.USER &&
+          receiverType === CometChat.RECEIVER_TYPE.USER &&
+          receiverId === item.uid)
+      ) {
+        this.appendCallMessage(rejectedCallMessage);
+      }
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  outgoingCallEnded = (message) => {
+    this.setState({ outgoingCall: null, incomingCall: null });
+    this.appendCallMessage(message);
+  };
+
+  /**
+   * image view when clicked on image
+   * @param message: message object
+   */
+  toggleImageView = (message) => {
+    this.setState({ imageView: message });
+  };
+
+  /**
+   * handler for member added to the group by a user and updation of groupMessage.
+   * @param members: members object
+   */
+
+  membersAdded = (members) => {
+    try {
+      const messageList = [];
+      members.forEach((eachMember) => {
+        const message = `${this.loggedInUser.name} added ${eachMember.name}`;
+        const sentAt = (new Date() / 1000) | 0;
+        const messageObj = {
+          category: 'action',
+          message,
+          type: enums.ACTION_TYPE_GROUPMEMBER,
+          sentAt,
+        };
+        messageList.push(messageObj);
+      });
+
+      this.setState({ groupMessage: messageList });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * handler for member unbanned from the group by a user and updation of groupMessage.
+   * @param members: members object
+   */
+
+  memberUnbanned = (members) => {
+    try {
+      const messageList = [];
+      members.forEach((eachMember) => {
+        const message = `${this.loggedInUser.name} unbanned ${eachMember.name}`;
+        const sentAt = (new Date() / 1000) | 0;
+        const messageObj = {
+          category: 'action',
+          message,
+          type: enums.ACTION_TYPE_GROUPMEMBER,
+          sentAt,
+        };
+        messageList.push(messageObj);
+      });
+
+      this.setState({ groupMessage: messageList });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * handler for member scope changed in the group by a user and updation of groupMessage.
+   * @param members: members object
+   */
+  memberScopeChanged = (members) => {
+    try {
+      const messageList = [];
+
+      members.forEach((eachMember) => {
+        const message = `${this.loggedInUser.name} made ${eachMember.name} ${eachMember.scope}`;
+        const sentAt = (new Date() / 1000) | 0;
+        const messageObj = {
+          category: 'action',
+          message,
+          type: enums.ACTION_TYPE_GROUPMEMBER,
+          sentAt,
+        };
+        messageList.push(messageObj);
+      });
+
+      this.setState({ groupMessage: messageList });
+    } catch (error) {
+      logger(error);
+    }
+  };
+
+  /**
+   * update callMessage and navigate to cometChatMessages
+   * @param call: call object
+   */
+  appendCallMessage = (call) => {
+    const { item, type } = this.state;
+    this.setState({ callMessage: call }, () => {
+      this.navigateToMessageListScreen(item, type);
+    });
   };
 
   render() {

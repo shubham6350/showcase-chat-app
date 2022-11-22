@@ -190,9 +190,9 @@ class CometChatMessages extends React.PureComponent {
   };
 
   updateMembersCount = (item, count) => {
+    // console.log(item,count,'kkkkkkkk');
     const { route } = this.props;
     const params = route?.params || this.props;
-
     const group = { ...this.state.item, membersCount: count };
     this.setState({ item: group, groupToUpdate: group });
     params.actionGenerated('membersUpdated', item, count);
