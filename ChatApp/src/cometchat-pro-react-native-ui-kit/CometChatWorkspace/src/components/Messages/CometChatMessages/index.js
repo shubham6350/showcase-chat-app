@@ -204,7 +204,7 @@ class CometChatMessages extends React.PureComponent {
     params.actionGenerated('membersUpdated', item, count);
   };
 
-  Messages = (message) => {
+  starMessages = (message) => {
     CometChat.callExtension('save-message', 'POST', 'v1/save', {
       msgId:message.id,
     })
