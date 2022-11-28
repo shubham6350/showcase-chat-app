@@ -96,7 +96,8 @@ const CometChatReceiverFileMessageBubble = (props) => {
             <TouchableWithoutFeedback
               onPress={download}
               onLongPress={() =>
-                props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
+                // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
+                props.starMessages(message)
               }>
               <View
                 style={[

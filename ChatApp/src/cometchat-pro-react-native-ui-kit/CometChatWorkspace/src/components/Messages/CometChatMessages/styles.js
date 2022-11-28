@@ -23,4 +23,8 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     height: deviceHeight - 80,
   },
+
+  //starred messages style
+  
+ 
 });

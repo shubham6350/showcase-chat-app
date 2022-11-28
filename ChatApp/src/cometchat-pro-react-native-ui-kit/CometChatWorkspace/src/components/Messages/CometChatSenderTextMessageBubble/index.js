@@ -6,6 +6,7 @@ import {
   Linking,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import theme from '../../../resources/theme';
 import Autolink from 'react-native-autolink';
@@ -52,7 +53,7 @@ const CometChatSenderTextMessageBubble = (props) => {
   const getMessageText = () => {
     return (
       <Autolink
-        text={message.text}
+        text={message.data.text}
         style={style.autoLinkStyle}
         textProps={{ selectable: true }}
         linkProps={{ suppressHighlighting: true }}
@@ -152,7 +153,7 @@ const CometChatSenderTextMessageBubble = (props) => {
                   ) : null}
                   <View style={style.previewTextStyle}>
                     <Autolink
-                      text={message.text}
+                      text={message.data.text}
                       style={[
                         style.previewAutoLinkStyle,
                         {
@@ -187,7 +188,9 @@ const CometChatSenderTextMessageBubble = (props) => {
     <View style={style.container}>
       <TouchableWithoutFeedback
         onLongPress={() => {
-          props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
+          // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
+          // props.messageFunction(false);
+          props.starMessages(message)
         }}>
         <View style={style.messageWrapperStyle}>
           {messageText}

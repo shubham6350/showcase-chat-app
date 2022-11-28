@@ -71,6 +71,7 @@ class CometChatMessages extends React.PureComponent {
       outgoingCall: null,
       incomingCall: null,
       ongoingDirectCall: null,
+      LongpressToggle: false,
     };
 
     this.composerRef = React.createRef();
@@ -189,6 +190,11 @@ class CometChatMessages extends React.PureComponent {
     );
   };
 
+  messageFunction = (userState) => {
+    // console.log(this.state.LongpressToggle, 'UUUUU');
+    this.setState({ LongpressToggle: userState });
+  };
+
   updateMembersCount = (item, count) => {
     // console.log(item,count,'kkkkkkkk');
     const { route } = this.props;
@@ -196,6 +202,20 @@ class CometChatMessages extends React.PureComponent {
     const group = { ...this.state.item, membersCount: count };
     this.setState({ item: group, groupToUpdate: group });
     params.actionGenerated('membersUpdated', item, count);
+  };
+
+  Messages = (message) => {
+    CometChat.callExtension('save-message', 'POST', 'v1/save', {
+      msgId:message.id,
+    })
+      .then((response) => {
+        // { success: true }
+        console.log(response,'1112222112211');
+      })
+      .catch((error) => {
+        // Error occured
+        console.log(error,'*************');
+      });
   };
 
   actionHandler = (action, messages, key, group, options) => {
@@ -1052,7 +1072,7 @@ class CometChatMessages extends React.PureComponent {
         </View>
       </Modal>
     );
-
+    //  console.log(params.messageconfig,'oooooooo');
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
         <KeyboardAvoidingView
@@ -1129,9 +1149,12 @@ class CometChatMessages extends React.PureComponent {
               // widgetsettings={route.params.widgetsettings}
               loggedInUser={params.loggedInUser}
               actionGenerated={this.actionHandler}
+              navigation={this.props.navigation}
+              LongpressToggle={this.state.LongpressToggle}
             />
             <CometChatMessageList
               theme={this.theme}
+              messagefunction={this.messageFunction}
               messages={this.state.messageList}
               item={
                 params.type === CometChat.RECEIVER_TYPE.USER
@@ -1148,6 +1171,7 @@ class CometChatMessages extends React.PureComponent {
               // widgetconfig={route.params.widgetconfig}
               loggedInUser={params.loggedInUser}
               actionGenerated={this.actionHandler}
+              starMessages={this.starMessages}
             />
             {liveReactionView}
             {messageComposer}

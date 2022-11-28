@@ -174,7 +174,7 @@ class CometChatCreateGroup extends React.Component {
         this.leaveGroup(item, ...otherProps);
         break;
       case actions.MEMBERS_UPDATED:
-        this.updateMembersCount(item, this.state.membersToAdd.length);
+        this.updateMembersCount(item,count);
         break;
       case actions.VIEW_MESSAGE_THREAD:
         this.viewMessageThread(item);
@@ -247,16 +247,15 @@ class CometChatCreateGroup extends React.Component {
     this.setState({ password: feedback });
   };
 
-  createGroupActionHandler = (action, group) => {
-    console.log(group, '=======');
+  createGroupActionHandler = async(action, group) => {
+    // console.log(this.state.membersT, '=======');
+    this.setState({item:group})
     if (action === actions.GROUP_CREATED) {
       const groupList = [group, ...this.state.grouplist];
-
-      // this.handleClick(group);
-      this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
+      this.updateMembersCount(this.state.item,this.state.membersToAdd.length+1);
+      this.itemClicked(this.state.item, CometChat.RECEIVER_TYPE.GROUP);
       this.setState({ grouplist: groupList, createGroup: false });
     }
-    console.log(this.state.grouplist,'uuuuuu');
   };
 
   /**
@@ -289,14 +288,13 @@ class CometChatCreateGroup extends React.Component {
    * @param
    * @returns boolean: true if validation is passed else false.
    */
-  itemClicked = (item, type) => {
+  itemClicked =(item, type) => {
     this.setState({ item: { ...item }, type, viewDetailScreen: false }, () => {
       this.navigateToMessageListScreen(item, type);
     });
   };
 
   navigateToMessageListScreen = (item, type) => {
-    // console.log(this.callMessage,'oooooo');
     this.props.navigation.navigate(
       enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES,
       {
@@ -312,61 +310,61 @@ class CometChatCreateGroup extends React.Component {
     );
   };
 
-  handleClick = (group) => {
-    // console.log(group,'yyyyyyy');
-    //handle click here
-    if (!this.itemClicked) return;
+  // handleClick = (group) => {
+  //   // console.log(group,'yyyyyyy');
+  //   //handle click here
+  //   if (!this.itemClicked) return;
 
-    // if (group.hasJoined === false) {
-    //   if (this.state.restrictions?.isJoinLeaveGroupsEnabled === false) {
-    //     return false;
-    //   }
-    //   if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
-    //     this.setState({
-    //       showPasswordScreen: true,
-    //       guid: group.guid,
-    //       groupType: group.type,
-    //     });
-    //   }
+  //   // if (group.hasJoined === false) {
+  //   //   if (this.state.restrictions?.isJoinLeaveGroupsEnabled === false) {
+  //   //     return false;
+  //   //   }
+  //   //   if (group.type === CometChat.GROUP_TYPE.PASSWORD) {
+  //   //     this.setState({
+  //   //       showPasswordScreen: true,
+  //   //       guid: group.guid,
+  //   //       groupType: group.type,
+  //   //     });
+  //   //   }
 
-    if (group.type === CometChat.GROUP_TYPE.PUBLIC) {
-      CometChat.joinGroup(group.guid, group.type, '')
-        .then((response) => {
-          const groups = [...this.state.grouplist];
-          if (typeof response === 'object') {
-            this.dropDownAlertRef?.showMessage(
-              'success',
-              'Group Joined Successfully',
-            );
-          } else {
-            this.dropDownAlertRef?.showMessage('error', 'Failed to join group');
-          }
-          const groupKey = groups.findIndex((g) => g.guid === group.guid);
-          if (groupKey > -1) {
-            const groupObj = groups[groupKey];
-            const newGroupObj = {
-              ...groupObj,
-              ...response,
-              scope: CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
-            };
+  //   if (group.type === CometChat.GROUP_TYPE.PUBLIC) {
+  //     CometChat.joinGroup(group.guid, group.type, '')
+  //       .then((response) => {
+  //         const groups = [...this.state.grouplist];
+  //         if (typeof response === 'object') {
+  //           this.dropDownAlertRef?.showMessage(
+  //             'success',
+  //             'Group Joined Successfully',
+  //           );
+  //         } else {
+  //           this.dropDownAlertRef?.showMessage('error', 'Failed to join group');
+  //         }
+  //         const groupKey = groups.findIndex((g) => g.guid === group.guid);
+  //         if (groupKey > -1) {
+  //           const groupObj = groups[groupKey];
+  //           const newGroupObj = {
+  //             ...groupObj,
+  //             ...response,
+  //             scope: CometChat.GROUP_MEMBER_SCOPE.PARTICIPANT,
+  //           };
 
-            groups.splice(groupKey, 1, newGroupObj);
-            this.setState({ grouplist: groups, selectedGroup: newGroupObj });
+  //           groups.splice(groupKey, 1, newGroupObj);
+  //           this.setState({ grouplist: groups, selectedGroup: newGroupObj });
 
-            this.itemClicked(newGroupObj, CometChat.RECEIVER_TYPE.GROUP);
-          }
-        })
-        .catch((error) => {
-          const errorCode = error?.message || 'ERROR';
-          this.dropDownAlertRef?.showMessage('error', errorCode);
-          logger('Group joining failed with exception:', error);
-        });
-    }
-    // } else {
-    //   this.setState({ selectedGroup: group });
-    //   this.props.onItemClick(group, CometChat.RECEIVER_TYPE.GROUP);
-    // }
-  };
+  //           this.itemClicked(newGroupObj, CometChat.RECEIVER_TYPE.GROUP);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         const errorCode = error?.message || 'ERROR';
+  //         this.dropDownAlertRef?.showMessage('error', errorCode);
+  //         logger('Group joining failed with exception:', error);
+  //       });
+  //   }
+  //   // } else {
+  //   //   this.setState({ selectedGroup: group });
+  //   //   this.props.onItemClick(group, CometChat.RECEIVER_TYPE.GROUP);
+  //   // }
+  // };
 
   validate = () => {
     const groupName = this.state.name?.trim();
@@ -500,11 +498,11 @@ class CometChatCreateGroup extends React.Component {
         const MembersToAdd = [];
         // this.props.close();
 
-        console.log('ksh 6');
+        // console.log('ksh 6');
         await CometChat.addMembersToGroup(guid, membersList, [])
           .then((response) => {
-            console.log(response, 'response');
-            console.log('ksh 7');
+            // console.log(response, 'response');
+            // console.log('ksh 7');
             if (Object.keys(response).length) {
               for (const member in response) {
                 if (response[member] === 'success') {
@@ -517,11 +515,7 @@ class CometChatCreateGroup extends React.Component {
                   console.log(found.scope, 'found1');
                 }
               }
-              // console.log(MembersToAdd, 'pppppppp');
-              // this.props.navigation.navigate('Chat');
-              // this.props.clickHandler(group);
-
-              console.log('ksh 8');
+              // console.log('ksh 8');
             }
           })
           .catch((error) => {
@@ -566,8 +560,10 @@ class CometChatCreateGroup extends React.Component {
       await this.updateMembers(guid, group);
       console.log('ksh 4');
     }
-
     this.createGroupActionHandler(actions.GROUP_CREATED,incomingGroup)
+
+    
+    
 
     // this.itemClicked(group, CometChat.RECEIVER_TYPE.GROUP);
 

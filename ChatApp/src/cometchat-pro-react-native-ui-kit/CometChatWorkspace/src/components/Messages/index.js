@@ -9,6 +9,7 @@ export { default as CometChatMessageList } from './CometChatMessageList';
 export { default as CometChatMessageThread } from './CometChatMessageThread';
 export { default as CometChatMessages } from './CometChatMessages';
 export { default as CometChatReadReceipt } from './CometChatReadReceipt';
+export {default as StarMessages} from './CometChatMessages/starMessages';
 export { default as CometChatReceiverAudioMessageBubble } from './CometChatReceiverAudioMessageBubble';
 export { default as CometChatReceiverFileMessageBubble } from './CometChatReceiverFileMessageBubble';
 export { default as CometChatReceiverImageMessageBubble } from './CometChatReceiverImageMessageBubble';

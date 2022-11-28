@@ -2,27 +2,37 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+// import { NavigationAction } from '@react-navigation/native';
 
-import { View, Text, Image, TouchableOpacity,Modal,StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+} from 'react-native';
 import { CometChatGroupListWithMessages } from '../Groups';
 import { CometChatUserListWithMessages } from '../Users';
 import { CometChatConversationListWithMessages } from '../Chats';
 import { CometChatContextProvider } from '../../utils/CometChatContext';
 import { CometChatUserProfile } from '../UserProfile';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import MCIIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../../resources/theme';
 import { heightRatio } from '../../utils/consts';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { TextInput } from 'react-native-gesture-handler';
 // import { Image } from 'react-native-svg';
 
 const Tab = createMaterialTopTabNavigator();
 
-function CometChatUI() {
+function CometChatUI({ navigation }) {
   const [tabs, setTabs] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const contextRef = useRef(null);
+  const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
     checkRestrictions();
@@ -80,21 +90,73 @@ function CometChatUI() {
               style={{ height: 25, width: 25, marginRight: 15, marginTop: 2 }}
               source={require('../../../../../../assets/images/logoo.png')}
             />
-            <Text
-              style={{
-                fontFamily: 'Urbanist-Bold',
-                fontSize: 24,
-                fontWeight: '700',
-                color: '#FFFFFF',
-              }}>
-              Logo
-            </Text>
+            {toggle ? (
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  width: '85%',
+                  height: 35,
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  // padding: ,
+                  borderRadius: 10,
+                  flexDirection: 'row',
+                }}>
+                {/* <View
+                  style={{
+                    width: '10%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // backgroundColor: 'blue',
+                  }}>
+                  <Ionicons name="search-outline" size={20} />
+                </View> */}
+
+                <View
+                  style={{
+                    width: '90%',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    // backgroundColor: 'blue',
+                  }}>
+                  <TextInput
+                    style={{
+                      marginLeft: 10,
+                    }}
+                    placeholder="search.."
+                  />
+                </View>
+                <View
+                  style={{
+                    width: '9%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity onPress={() => setToggle(!toggle)}>
+                    <Entypo name="cross" size={20} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <Text
+                style={{
+                  fontFamily: 'Urbanist-Bold',
+                  fontSize: 24,
+                  fontWeight: '700',
+                  color: '#FFFFFF',
+                }}>
+                Logo
+              </Text>
+            )}
           </View>
           <View style={{ backgroundColor: '#246BFD', width: '10%' }}>
-            <Ionicons name="search-outline" size={24} color="#FFFFFF" />
+            <TouchableOpacity onPress={() => setToggle(!toggle)}>
+              <Ionicons name="search-outline" size={24} color="#FFFFFF" />
+            </TouchableOpacity>
           </View>
           <View style={{ backgroundColor: '#246BFD', width: '10%' }}>
-            <TouchableOpacity  onPress={()=>setModalVisible(true)} >
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
               <Ionicons
                 name="ellipsis-horizontal-circle"
                 size={24}
@@ -199,17 +261,23 @@ function CometChatUI() {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
+          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
-        }}
-      >
-        <TouchableOpacity  onPress={()=>setModalVisible(false)} style={styles.centeredView}>
+        }}>
+        <TouchableOpacity
+          onPress={() => setModalVisible(false)}
+          style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Star'), setModalVisible(false);
+              }}>
+              <Text style={styles.modalText}>Starred Messages</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
+              onPress={() => setModalVisible(!modalVisible)}>
               <Text style={styles.textStyle}>Logout</Text>
             </TouchableOpacity>
           </View>
@@ -224,44 +292,44 @@ export default CometChatUI;
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-end",
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
     marginTop: 22,
     // backgroundColor:'red',
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonOpen: {
-    backgroundColor: "#F194FF",
+    backgroundColor: '#F194FF',
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: '#2196F3',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: 'center',
+  },
 });

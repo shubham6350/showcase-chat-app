@@ -19,6 +19,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { CometChatContext } from '../../../utils/CometChatContext';
 class CometChatMessageHeader extends React.Component {
+  
   static contextType = CometChatContext;
   constructor(props) {
     super(props);
@@ -377,20 +378,21 @@ class CometChatMessageHeader extends React.Component {
 
     return (
       <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => this.props.actionGenerated(actions.GO_BACK)}
-          style={styles.backButtonContainer}>
-          {/* <MaterialCommunityIcons
-            name="arrow-left"
-            size={32}
-            style={{fontWeight: 1}}
-            color={this.props.theme.color.white}
-          /> */}
-          <Image
-            source={require('../../../../../../../assets/images/Leftback.png')}
-            style={{ width: 30, height: 30 }}
-          />
-        </TouchableOpacity>
+         <TouchableOpacity
+         // onPress={() => this.props.actionGenerated(actions.GO_BACK)}
+         onPress={() => this.props.navigation.navigate('Chat')}
+         style={styles.backButtonContainer}>
+         {/* <MaterialCommunityIcons
+           name="arrow-left"
+           size={32}
+           style={{fontWeight: 1}}
+           color={this.props.theme.color.white}
+         /> */}
+         <Image
+           source={require('../../../../../../../assets/images/Leftback.png')}
+           style={{ width: 30, height: 30 }}
+         />
+       </TouchableOpacity>  
         <View style={styles.headerDetailContainer}>
           {/* <View
             style={[

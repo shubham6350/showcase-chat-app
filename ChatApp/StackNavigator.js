@@ -16,6 +16,7 @@ import {
   CometChatGroupList,
   CometChatConversationListWithMessages,
   CometChatConversationList,
+  StarMessages,
 } from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/index';
 import { connect } from 'react-redux';
 import { CometChatCreateGroup } from './src/cometchat-pro-react-native-ui-kit/CometChatWorkspace/src/components/Groups';
@@ -147,6 +148,13 @@ const StackNavigator = (props) => {
         <Stack.Screen
           name="Add_Member"
           component={CometChatAddGroupMemberList}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Star"
+          component={StarMessages}
           options={{
             headerShown: false,
           }}

@@ -45,7 +45,8 @@ const CometChatReceiverTextMessageBubble = (props) => {
   }, []);
 
   const checkRestrictions = async () => {
-    let isLinkPreviewEnabled = context.FeatureRestriction.isLinkPreviewEnabled();
+    let isLinkPreviewEnabled =
+      context.FeatureRestriction.isLinkPreviewEnabled();
     setRestrictions({ isLinkPreviewEnabled });
   };
 
@@ -57,7 +58,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
   const getMessageText = () => {
     return (
       <Autolink
-        text={message.text}
+        text={message.data.text}
         style={style.autolinkStyle}
         textProps={{ selectable: true }}
         linkProps={{ suppressHighlighting: true }}
@@ -97,7 +98,8 @@ const CometChatReceiverTextMessageBubble = (props) => {
           !restrictions?.isLinkPreviewEnabled
         ) {
           const linkObject = linkPreviewObject.links[0];
-          const pattern = /(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)(\S+)?/;
+          const pattern =
+            /(http:|https:)?\/\/(www\.)?(youtube.com|youtu.be)(\S+)?/;
           const linkText = linkObject.url.match(pattern)
             ? 'View on Youtube'
             : 'Visit';
@@ -154,7 +156,7 @@ const CometChatReceiverTextMessageBubble = (props) => {
                   ) : null}
                   <View style={style.previewTextStyle}>
                     <Autolink
-                      text={message.text}
+                      text={message.data.text}
                       style={{
                         color: viewTheme.color.helpText,
                         textAlign: 'center',
@@ -205,7 +207,9 @@ const CometChatReceiverTextMessageBubble = (props) => {
           <View style={style.messageContainer}>
             <TouchableWithoutFeedback
               onLongPress={() => {
-                props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
+                // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
+
+                props.starMessages(message);
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <View
@@ -217,19 +221,19 @@ const CometChatReceiverTextMessageBubble = (props) => {
                   ]}>
                   {messageText}
                   <View style={[style.messageInfoWrapperStyle]}>
-              <CometChatReadReceipt {...props} message={message} />
+                    <CometChatReadReceipt {...props} message={message} />
 
-              <CometChatThreadedMessageReplyCount
-                {...props}
-                message={message}
-              />
-              <CometChatMessageReactions
-                theme={props.theme}
-                {...props}
-                message={message}
-                showMessage={props?.showMessage}
-              />
-            </View>
+                    <CometChatThreadedMessageReplyCount
+                      {...props}
+                      message={message}
+                    />
+                    <CometChatMessageReactions
+                      theme={props.theme}
+                      {...props}
+                      message={message}
+                      showMessage={props?.showMessage}
+                    />
+                  </View>
                 </View>
               </View>
             </TouchableWithoutFeedback>

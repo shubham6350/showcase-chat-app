@@ -9,7 +9,7 @@ export {
   CometChatMedia,
 } from './components/Users';
 export { default as CometChatUI } from './components/CometChatUI';
-export { CometChatMessages } from './components/Messages';
+export { CometChatMessages,StarMessages } from './components/Messages/index';
 export {
   CometChatGroupList,
   CometChatGroupListWithMessages,
