@@ -200,6 +200,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
    */
 
   sendMediaMessage = (messageInput, messageType) => {
+    // console.log(messageInput,'WWWWWW');
     try {
 
       const { receiverId, receiverType } = this.getReceiverDetails();

@@ -693,6 +693,7 @@ class CometChatMessageList extends React.PureComponent {
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
               starMessages={this.props.starMessages}
+              messageFunction={this.props.messagefunction}
               
             />
           ) : null;
@@ -786,6 +787,7 @@ class CometChatMessageList extends React.PureComponent {
               widgetconfig={this.props.widgetconfig}
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
+              messageFunction={this.props.messagefunction}
               starMessages={this.props.starMessages}
             />
           ) : null;

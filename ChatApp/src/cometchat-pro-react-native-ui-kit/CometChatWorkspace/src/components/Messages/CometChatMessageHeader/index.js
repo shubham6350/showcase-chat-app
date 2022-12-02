@@ -19,7 +19,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import { CometChatContext } from '../../../utils/CometChatContext';
 class CometChatMessageHeader extends React.Component {
-  
   static contextType = CometChatContext;
   constructor(props) {
     super(props);
@@ -376,53 +375,158 @@ class CometChatMessageHeader extends React.Component {
       </TouchableOpacity>
     );
 
+    // console.log( this.props.LongpressToggle,'uwhbfjkwhbfhjkwbfkjhwebfhjeqw');
+
     return (
       <View style={styles.headerContainer}>
-         <TouchableOpacity
-         // onPress={() => this.props.actionGenerated(actions.GO_BACK)}
-         onPress={() => this.props.navigation.navigate('Chat')}
-         style={styles.backButtonContainer}>
-         {/* <MaterialCommunityIcons
-           name="arrow-left"
-           size={32}
-           style={{fontWeight: 1}}
-           color={this.props.theme.color.white}
-         /> */}
-         <Image
-           source={require('../../../../../../../assets/images/Leftback.png')}
-           style={{ width: 30, height: 30 }}
-         />
-       </TouchableOpacity>  
-        <View style={styles.headerDetailContainer}>
-          {/* <View
-            style={[
-              styles.avatarContainer,
-              {
-                backgroundColor: '#fff',
-              },
-            ]}>
-            <CometChatAvatar
-              image={{ uri: image }}
-              cornerRadius={25}
-              borderColor={this.props.theme.borderColor.white}
-              borderWidth={0}
-              name={userName}
-            />
-            {presence}
-          </View> */}
-          <View style={styles.itemDetailContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.actionGenerated(actions.VIEW_DETAIL)}>
-              <Text style={styles.itemNameText} numberOfLines={1}>
-                {this.props.item.name}
-              </Text>
-              {status}
-            </TouchableOpacity>
+        {this.props.LongpressToggle ? (
+          <View
+            style={{
+              // backgroundColor: 'blue',
+              width: '100%',
+              height: 50,
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+            }}>
+            <View
+              style={{
+                // backgroundColor: 'red',
+                width: '20%',
+                height: 50,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  height: 40,
+                  width: 35,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={() => this.props.messagefunction(false)}>
+                  <Icon name="arrow-back-outline" size={28} color="#fff" />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  height: 40,
+                  width: 35,
+                  // backgroundColor: 'grey',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{ fontWeight: '500', fontSize: 23, color: '#fff' }}>
+                  5
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                // backgroundColor: 'green',
+                width: '75%',
+                height: 50,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+              }}>
+              <View style={{ width: '10%', height: 30 }}>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../../../../../../../assets/images/backward.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '10%', height: 30 }}>
+                <TouchableOpacity onPress={() => this.props.starMessages()}>
+                  <Image
+                    source={require('../../../../../../../assets/images/star.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '10%', height: 30 }}>
+                <Image
+                  source={require('../../../../../../../assets/images/copy.png')}
+                />
+              </View>
+              <View style={{ width: '10%', height: 30 }}>
+                <TouchableOpacity>
+                  <Image
+                    source={require('../../../../../../../assets/images/deleteIcon.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '10%', height: 30 }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    // this.props.navigation.navigate('Forward'),
+                      this.props.getforwardList(true);
+                  }}>
+                  <Image
+                    source={require('../../../../../../../assets/images/forward.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '10%', height: 30 }}>
+                <Image
+                  source={require('../../../../../../../assets/images/info.png')}
+                />
+              </View>
+            </View>
           </View>
-          {audioCallBtn}
-          {videoCallBtn}
-          {info}
-        </View>
+        ) : (
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+              // onPress={() => this.props.actionGenerated(actions.GO_BACK)}
+              onPress={() => this.props.navigation.navigate('Chat')}
+              style={styles.backButtonContainer}>
+              {/* <MaterialCommunityIcons
+          name="arrow-left"
+          size={32}
+          style={{fontWeight: 1}}
+          color={this.props.theme.color.white}
+        /> */}
+              <Image
+                source={require('../../../../../../../assets/images/Leftback.png')}
+                style={{ width: 30, height: 30 }}
+              />
+            </TouchableOpacity>
+            <View style={styles.headerDetailContainer}>
+              {/* <View
+           style={[
+             styles.avatarContainer,
+             {
+               backgroundColor: '#fff',
+             },
+           ]}>
+           <CometChatAvatar
+             image={{ uri: image }}
+             cornerRadius={25}
+             borderColor={this.props.theme.borderColor.white}
+             borderWidth={0}
+             name={userName}
+           />
+           {presence}
+         </View> */}
+              <View style={styles.itemDetailContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.actionGenerated(actions.VIEW_DETAIL)
+                  }>
+                  <Text style={styles.itemNameText} numberOfLines={1}>
+                    {this.props.item.name}
+                  </Text>
+                  {status}
+                </TouchableOpacity>
+              </View>
+              {audioCallBtn}
+              {videoCallBtn}
+              {info}
+            </View>
+          </View>
+        )}
       </View>
     );
   }

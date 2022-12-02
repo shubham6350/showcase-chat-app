@@ -53,6 +53,8 @@ export default (props) => {
     });
   };
 
+  // console.log(props.message,'_______________________-----------______');
+
   let sendMessage = null;
   if (
     props.message.messageFrom === enums.MESSAGE_FROM_RECEIVER &&

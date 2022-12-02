@@ -21,6 +21,7 @@ export default StyleSheet.create({
     marginRight: 15 * widthRatio,
     justifyContent: 'center',
     borderWidth: 0.5,
+    // borderRadius:50,
   },
   itemDetailsContainer: {
     borderBottomWidth: 1,

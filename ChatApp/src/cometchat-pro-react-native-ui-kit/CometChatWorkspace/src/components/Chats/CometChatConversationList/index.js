@@ -434,9 +434,9 @@ class CometChatConversationList extends React.Component {
   };
 
   setVall = () => {
-    if(!this.state.messageCount){
+    if (!this.state.messageCount) {
       let messageCount = true;
-      this.setState({messageCount});
+      this.setState({ messageCount });
     }
   };
   /**
@@ -583,7 +583,7 @@ class CometChatConversationList extends React.Component {
           .then((conversationList) => {
             if (conversationList.length === 0) {
               let messageCount = false;
-              this.setState({messageCount})
+              this.setState({ messageCount });
               this.decoratorMessage = 'No chats found';
             }
             // else{
@@ -595,7 +595,7 @@ class CometChatConversationList extends React.Component {
             //   this.setState({messageCount})
             // }
             // let messageCount = false;
-              // this.setState({messageCount})
+            // this.setState({messageCount})
             this.setState({
               conversationList: [
                 ...this.state.conversationList,
@@ -866,13 +866,31 @@ class CometChatConversationList extends React.Component {
    * Handle clicking on list item
    * @param conversation: conversation object of the item clicked
    */
+
+  test = (i, j) => {
+    // console.log(i,j,'^^^^^^^^^^^');
+    let tags = ['archivedChat'];
+    CometChat.tagConversation(i.uid, j, tags).then(
+      (conversation) => {
+        console.log('conversation', conversation);
+      },
+      (error) => {
+        console.log('error while fetching a conversation', error);
+      },
+    );
+  };
+
   handleClick = (conversation) => {
+    console.log(conversation.conversationWith, 'TTTTT%%');
+    this.test(conversation.conversationWith, conversation.conversationType);
     try {
       if (!this.props.onItemClick) return;
 
       this.props.onItemClick(
+        
         conversation.conversationWith,
         conversation.conversationType,
+        this.state.conversationList,
       );
     } catch (error) {
       logger(error);
@@ -959,8 +977,13 @@ class CometChatConversationList extends React.Component {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <View style={{ width: '80%', alignItems: 'center' , marginTop: 10 }}>
-            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Medium' ,justifyContent: 'center'}}>
+          <View style={{ width: '80%', alignItems: 'center', marginTop: 10 }}>
+            <Text
+              style={{
+                fontWeight: '500',
+                fontFamily: 'Urbanist-Medium',
+                justifyContent: 'center',
+              }}>
               Hi chat connects you with family and friends.
             </Text>
           </View>
@@ -978,7 +1001,9 @@ class CometChatConversationList extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Bold'  }}>Start chatting now!</Text>
+            <Text style={{ fontWeight: '500', fontFamily: 'Urbanist-Bold' }}>
+              Start chatting now!
+            </Text>
           </View>
         </View>
 
@@ -1072,184 +1097,237 @@ class CometChatConversationList extends React.Component {
   render() {
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
-        {this.state.conversationList.length > 0 ?  
-        <SafeAreaView style={{ backgroundColor: '#fff' }}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.conversationWrapperStyle}>
-            <View style={styles.headerContainer}></View>
-            {/* {this.listHeaderComponent()} */}
-            {/* {this.state.conversationList ?   */}
-            <SwipeListView
-              contentContainerStyle={styles.flexGrow1}
-              data={this.state.conversationList}
-              keyExtractor={(item, index) => item?.conversationId + '_' + index}
-              renderHiddenItem={(data, rowMap) => (
-                <View
-                  key={data.item?.conversationId}
-                  style={{
-                    alignItems: 'center',
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingLeft: 15,
-                  }}>
-                  <TouchableOpacity
+        {this.state.conversationList.length > 0 ? (
+          <SafeAreaView style={{ backgroundColor: '#fff' }}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.conversationWrapperStyle}>
+              <View style={styles.headerContainer}></View>
+              {/* {this.listHeaderComponent()} */}
+              {/* {this.state.conversationList ?   */}
+              <SwipeListView
+                contentContainerStyle={styles.flexGrow1}
+                data={this.state.conversationList}
+                keyExtractor={(item, index) =>
+                  item?.conversationId + '_' + index
+                }
+                renderHiddenItem={(data, rowMap) => (
+                  <View
+                    key={data.item?.conversationId}
                     style={{
                       alignItems: 'center',
-                      bottom: 0,
-                      justifyContent: 'center',
-                      position: 'absolute',
-                      top: 0,
-                      width: 75,
-                      backgroundColor: '#246BFD',
-                      right: 0,
-                      maxHeight: 64,
-                    }}
-                    onPress={() => this.deleteConversations(data.item)}>
-                    <Image
-                      source={require('./resources/delete.png')}
-                      resizeMode="contain"
-                      style={{ height: 24 }}
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      paddingLeft: 15,
+                    }}>
+                    <TouchableOpacity
+                      style={{
+                        alignItems: 'center',
+                        bottom: 0,
+                        justifyContent: 'center',
+                        position: 'absolute',
+                        top: 0,
+                        width: 75,
+                        backgroundColor: '#246BFD',
+                        right: 0,
+                        maxHeight: 64,
+                      }}
+                      onPress={() => this.deleteConversations(data.item)}>
+                      <Image
+                        source={require('./resources/delete.png')}
+                        resizeMode="contain"
+                        style={{ height: 24 }}
+                      />
+                      {true ? this.setVall() : null}
+                      <Text style={styles.deleteText}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                leftOpenValue={-75}
+                rightOpenValue={0}
+                previewRowKey={'0'}
+                previewOpenValue={-40}
+                previewOpenDelay={3000}
+                renderItem={({ item }) => {
+                  return (
+                    <CometChatConversationListItem
+                      theme={this.theme}
+                      config={this.props.config}
+                      conversation={item}
+                      selectedConversation={this.state.selectedConversation}
+                      loggedInUser={this.loggedInUser}
+                      handleClick={this.handleClick}
                     />
-                    {true ? this.setVall() :  null}
-                    <Text style={styles.deleteText}>Delete</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              leftOpenValue={-75}
-              rightOpenValue={0}
-              previewRowKey={'0'}
-              previewOpenValue={-40}
-              previewOpenDelay={3000}
-              renderItem={({ item }) => {
-                return (
-                  <CometChatConversationListItem
-                    theme={this.theme}
-                    config={this.props.config}
-                    conversation={item}
-                    selectedConversation={this.state.selectedConversation}
-                    loggedInUser={this.loggedInUser}
-                    handleClick={this.handleClick}
-                  />
-                );
-              }}
-              // ListEmptyComponent={this.listEmptyContainer}
-              onScroll={this.handleScroll}
-              onEndReached={this.endReached}
-              onEndReachedThreshold={0.3}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled
-            />
+                  );
+                }}
+                // ListEmptyComponent={this.listEmptyContainer}
+                onScroll={this.handleScroll}
+                onEndReached={this.endReached}
+                onEndReachedThreshold={0.3}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled
+              />
             </KeyboardAvoidingView>
-          <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
-          <View style={{backgroundColor: 'transparent', height: 150,position: 'absolute',zIndex: 1,top: '80%', left: '70%', right: 0, bottom: 0}}>
-            {/* <Text>Test</Text> */}
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Users')}>
-            <Image source={require('../../../../../../../assets/images/newmsg.png')} style={{width: 120, height: 120}} />
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-            :
-            <>
-          {this.state.messageCount ? 
-              <SafeAreaView style={{justifyContent: 'center', backgroundColor: 'red', height: '100%', width: '100%' }}>
-             <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff'}}>
-             {/* <ActivityIndicator size="large" color="#00ff00" /> */}
-             <Image source={require('../../../../../../../assets/images/ezgif.com-gif-maker.gif')} style={{width: 200, height: 200}} />
-             </View>
-             </SafeAreaView>
-              :
+            <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+            <View
+              style={{
+                backgroundColor: 'transparent',
+                height: 150,
+                position: 'absolute',
+                zIndex: 1,
+                top: '80%',
+                left: '70%',
+                right: 0,
+                bottom: 0,
+              }}>
+              {/* <Text>Test</Text> */}
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Users')}>
+                <Image
+                  source={require('../../../../../../../assets/images/newmsg.png')}
+                  style={{ width: 120, height: 120 }}
+                />
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        ) : (
+          <>
+            {this.state.messageCount ? (
+              <SafeAreaView
+                style={{
+                  justifyContent: 'center',
+                  backgroundColor: 'red',
+                  height: '100%',
+                  width: '100%',
+                }}>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#fff',
+                  }}>
+                  {/* <ActivityIndicator size="large" color="#00ff00" /> */}
+                  <Image
+                    source={require('../../../../../../../assets/images/ezgif.com-gif-maker.gif')}
+                    style={{ width: 200, height: 200 }}
+                  />
+                </View>
+              </SafeAreaView>
+            ) : (
               <SafeAreaView style={{ backgroundColor: '#fff' }}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.conversationWrapperStyle}>
-            <View style={styles.headerContainer}></View>
-            <View style={styles.contactMsgStyle}>
-        <View
-          style={{
-            // backgroundColor: 'yellow',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+                <KeyboardAvoidingView
+                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                  style={styles.conversationWrapperStyle}>
+                  <View style={styles.headerContainer}></View>
+                  <View style={styles.contactMsgStyle}>
+                    <View
+                      style={{
+                        // backgroundColor: 'yellow',
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
 
-            // marginBottom: 50,
-          }}>
-          <Image
-            style={{ height: 222, width: 218 }}
-            source={require('../../../../../../../assets/images/GroupDFGD.png')}
-          />
-        </View>
-        <View
-          style={{
-            width: '100%',
-            height: '20%',
-            // backgroundColor: 'red',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              // backgroundColor: 'yellow',
-              width: '80%',
-              height: '82%',
-            }}>
-            <Text style={{ fontSize: 40, color: '#246BFD', fontWeight: '800', fontFamily: 'Urbanist-Bold'   }}>
-              Welcome! 👋
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            width: '100%',
-            // backgroundColor: 'blue',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View style={{ width: '80%', alignItems: 'center' , marginTop: 10 }}>
-            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Medium' ,justifyContent: 'center'}}>
-              Hi chat connects you with family and friends.
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            width: '100%',
-            // backgroundColor: 'yellow',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              width: '75%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={{ fontWeight: '500',fontFamily: 'Urbanist-Bold'  }}>Start chatting now!</Text>
-          </View>
-        </View>
+                        // marginBottom: 50,
+                      }}>
+                      <Image
+                        style={{ height: 222, width: 218 }}
+                        source={require('../../../../../../../assets/images/GroupDFGD.png')}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        height: '20%',
+                        // backgroundColor: 'red',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          // backgroundColor: 'yellow',
+                          width: '80%',
+                          height: '82%',
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: 40,
+                            color: '#246BFD',
+                            fontWeight: '800',
+                            fontFamily: 'Urbanist-Bold',
+                          }}>
+                          Welcome! 👋
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        // backgroundColor: 'blue',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          width: '80%',
+                          alignItems: 'center',
+                          marginTop: 10,
+                        }}>
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            fontFamily: 'Urbanist-Medium',
+                            justifyContent: 'center',
+                          }}>
+                          Hi chat connects you with family and friends.
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        // backgroundColor: 'yellow',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          width: '75%',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={{
+                            fontWeight: '500',
+                            fontFamily: 'Urbanist-Bold',
+                          }}>
+                          Start chatting now!
+                        </Text>
+                      </View>
+                    </View>
 
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Users')}
-          style={{
-            width: '100%',
-            marginTop: 40,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <View style={{ width: '80%' }}>
-            <SignIn_Button title="Start new Chat" />
-          </View>
-        </TouchableOpacity>
-      </View> 
-          </KeyboardAvoidingView>
-          <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
-        </SafeAreaView>
-             }
-        </>
-    }
+                    <TouchableOpacity
+                      onPress={() => this.props.navigation.navigate('Users')}
+                      style={{
+                        width: '100%',
+                        marginTop: 40,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View style={{ width: '80%' }}>
+                        <SignIn_Button title="Start new Chat" />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
+                <DropDownAlert ref={(ref) => (this.dropDownAlertRef = ref)} />
+              </SafeAreaView>
+            )}
+          </>
+        )}
       </CometChatContextProvider>
     );
   }

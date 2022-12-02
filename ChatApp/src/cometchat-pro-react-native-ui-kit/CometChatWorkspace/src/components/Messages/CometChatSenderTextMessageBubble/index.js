@@ -50,6 +50,9 @@ const CometChatSenderTextMessageBubble = (props) => {
    * @param
    */
 
+
+
+
   const getMessageText = () => {
     return (
       <Autolink
@@ -184,13 +187,15 @@ const CometChatSenderTextMessageBubble = (props) => {
     }
   }
 
+  // console.log(message,'$$$$$$$');
+
   return (
     <View style={style.container}>
       <TouchableWithoutFeedback
         onLongPress={() => {
-          // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
-          // props.messageFunction(false);
-          props.starMessages(message)
+          // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message),
+          props.messageFunction(true,message)
+          // props.starMessages(message)
         }}>
         <View style={style.messageWrapperStyle}>
           {messageText}

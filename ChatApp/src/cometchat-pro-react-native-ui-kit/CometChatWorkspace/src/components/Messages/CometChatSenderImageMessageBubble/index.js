@@ -75,7 +75,8 @@ const CometChatSenderImageMessageBubble = (props) => {
           style={style.messageImgWrapperStyle}
           onLongPress={() =>
             // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
-            props.starMessages(message)
+            // props.starMessages(message)
+            props.messageFunction(true,message)
           }>
           <FastImage
             defaultSource={{

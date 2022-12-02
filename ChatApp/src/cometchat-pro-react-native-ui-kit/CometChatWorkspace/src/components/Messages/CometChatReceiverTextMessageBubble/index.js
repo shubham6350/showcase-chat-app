@@ -209,7 +209,9 @@ const CometChatReceiverTextMessageBubble = (props) => {
               onLongPress={() => {
                 // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
 
-                props.starMessages(message);
+                props.messageFunction(true,message)
+
+                // props.starMessages(true, message);
               }}>
               <View style={{ flexDirection: 'row' }}>
                 <View

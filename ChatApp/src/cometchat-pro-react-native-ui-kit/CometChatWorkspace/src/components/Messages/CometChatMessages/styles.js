@@ -24,7 +24,80 @@ export default StyleSheet.create({
     height: deviceHeight - 80,
   },
 
-  //starred messages style
-  
- 
+  //forward messages style
+
+  header: {
+    width: '100%',
+    height: '9%',
+    backgroundColor: '#246BFD',
+    justifyContent: 'center',
+    marginTop:50,
+
+  },
+  container: {
+    // backgroundColor: 'yellow',
+    width: '100%',
+    height: '50%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    // backgroundColor:'green'
+  },
+  Icon_Container: {
+    height: 30,
+    width: 30,
+    // backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heading_Container: {
+    width: '80%',
+    height: 30,
+    // backgroundColor: 'green',
+    justifyContent: 'center',
+  },
+  heading_text: {
+    fontSize: 24,
+    fontWeight: '600',
+    fontFamily: 'urbanist',
+    color: '#FFF',
+  },
+  content: {
+    width: '100%',
+    height: '91%',
+    alignItems: 'center',
+    padding: 15,
+  },
+  userContainer: {
+    width: '100%',
+    height: 60,
+    // backgroundColor: 'green',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginTop: 10,
+    borderRadius: 10,
+  },
+  userProfile: {
+    height: 50,
+    width: 50,
+    backgroundColor: '#FFFFFF',
+    // backgroundColor:'green',
+    borderRadius: 0,
+  },
+  userName: {
+    width: '80%',
+    height: 40,
+    justifyContent: 'center',
+    // backgroundColor: 'yellow',
+  },
+  userNameText: {
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  groupButtonContainer: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
 });

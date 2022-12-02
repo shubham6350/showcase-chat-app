@@ -52,6 +52,7 @@ class CometChatConversationListWithMessages extends React.Component {
       groupMessage: {},
       lastMessage: {},
       isActive: true,
+      List: {},
     };
 
     this.theme = { ...theme, ...this.props.theme };
@@ -99,7 +100,11 @@ class CometChatConversationListWithMessages extends React.Component {
    * @param item: conversation item clicked
    * @param type: clicked conversation type - "user" or "group"
    */
-  itemClicked = (item, type) => {
+  itemClicked = (item, type, List) => {
+  //  List.map((item)=>{
+  //   console.log(item.conversationWith.name);
+
+  //  })
     this.setState({ item: { ...item }, type, viewDetailScreen: false }, () => {
       this.props.navigation.navigate(
         enums.NAVIGATION_CONSTANTS.COMET_CHAT_MESSAGES,
@@ -112,6 +117,7 @@ class CometChatConversationListWithMessages extends React.Component {
           callMessage: this.state.callMessage,
           loggedInUser: this.loggedInUser,
           actionGenerated: this.actionHandler,
+         
         },
       );
     });
@@ -290,7 +296,7 @@ class CometChatConversationListWithMessages extends React.Component {
     try {
       let receiverId;
       let receiverType;
-     
+
       if (this.state.type === 'user') {
         receiverId = this.state.item.uid;
         receiverType = CometChat.RECEIVER_TYPE.USER;
@@ -299,9 +305,9 @@ class CometChatConversationListWithMessages extends React.Component {
         receiverType = CometChat.RECEIVER_TYPE.GROUP;
       }
 
-      console.log(receiverId,receiverType,'');
-      
-      CometChatManager.call(receiverId,receiverType, CometChat.CALL_TYPE.AUDIO)
+      console.log(receiverId, receiverType, '');
+
+      CometChatManager.call(receiverId, receiverType, CometChat.CALL_TYPE.AUDIO)
         .then((call) => {
           this.appendCallMessage(call);
           this.state.isActive ? this.setState({ outgoingCall: call }) : null;

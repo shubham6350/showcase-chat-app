@@ -355,6 +355,8 @@ class CometChatConversationListItem extends React.Component {
         />
       );
     }
+
+    // console.log(this.props.conversation.conversationWith.name,'IIIRRSSSS');
     return (
       <View key={this.props?.conversation?.conversationId}>
         <TouchableOpacity

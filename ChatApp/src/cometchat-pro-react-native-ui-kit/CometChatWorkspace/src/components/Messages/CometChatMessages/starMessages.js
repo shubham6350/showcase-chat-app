@@ -56,13 +56,11 @@ const StarMessages = ({ navigation }) => {
 
   //   FetchStarMessages();
 
-  console.log(saved.savedMessages, 'sdftfds');
+  console.log(saved?.savedMessages?.[0].data.entities, 'stuck herer');
 
   // const renderItem = ({ item }) => {
   //   return <Text>{item.data.text}</Text>;
   // };
-
- 
 
   return (
     <SafeAreaView>
@@ -74,7 +72,7 @@ const StarMessages = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={() => FetchStarMessages()}
+            // onPress={() => FetchStarMessages()}
             style={styles.headingContainer}>
             <Text style={styles.headingText}>Starred Messages</Text>
           </TouchableOpacity>
@@ -98,22 +96,16 @@ const StarMessages = ({ navigation }) => {
             theme={theme}
             //   messagefunction={this.messageFunction}
             messages={saved.savedMessages}
-            // item={
-            //   'user' === CometChat.RECEIVER_TYPE.USER
-            //     ? this.state.user
-            //     : this.state.item
-            // }
-            // type="user"
-            //   scrollToBottom={this.state.scrollToBottom}
-            //   messageConfig={params.messageconfig}
-            //   showMessage={(type, message) => {
-            //     this.DropDownAlertRef?.showMessage(type, message);
-            //   }}
+            item={null}
+            // type={null}
+            // scrollToBottom={null}
+            // messageConfig={null}
+            // showMessage={null}
             // widgetsettings={route.params.widgetsettings}
             // widgetconfig={route.params.widgetconfig}
             loggedInUser={loggedInUser}
-            //   actionGenerated={this.actionHandler}
-            //   starMessages={this.starMessages}
+            // actionGenerated={null}
+            // starMessages={this.starMessages}
           />
         ) : (
           <View

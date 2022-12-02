@@ -7,6 +7,11 @@ import {
   Modal,
   Dimensions,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  Image,
+  Alert,
 } from 'react-native';
 import { CometChat } from '@cometchat-pro/react-native-chat';
 import * as actions from '../../../utils/actions';
@@ -15,6 +20,7 @@ import {
   CometChatContextProvider,
   CometChatContext,
 } from '../../../utils/CometChatContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import CometChatUserDetails from '../../Users/CometChatUserDetails';
 import CometChatLiveReactions from '../CometChatLiveReactions';
 import CometChatMessageHeader from '../CometChatMessageHeader';
@@ -39,6 +45,7 @@ import DropDownAlert from '../../Shared/DropDownAlert';
 import BottomSheet from 'reanimated-bottom-sheet';
 import style from './styles';
 import CometChatUserProfile from '../../Users/CometChatUserProfile';
+import Antdesign from 'react-native-vector-icons/AntDesign';
 
 class CometChatMessages extends React.PureComponent {
   static contextType = CometChatContext;
@@ -72,6 +79,12 @@ class CometChatMessages extends React.PureComponent {
       incomingCall: null,
       ongoingDirectCall: null,
       LongpressToggle: false,
+      starmessage: {},
+      forwardMessageView: false,
+      users: {},
+      selectedMessages: [],
+      selected: false,
+      sendtoggle: false,
     };
 
     this.composerRef = React.createRef();
@@ -190,9 +203,24 @@ class CometChatMessages extends React.PureComponent {
     );
   };
 
-  messageFunction = (userState) => {
+  // func = (i) => {
+  //   this.state.selectedMessages.map((items) => {
+  //     const textMessage = new CometChat.TextMessage(
+  //       items.item.uid,
+  //       i.text,
+  //       'user',
+  //     );
+  //     console.log(textMessage, '99999999');
+  //   });
+  // };
+
+  messageFunction = (userState, message) => {
+    // console.log(message, 'JJJJJ');
+    // this.func(message)
+
     // console.log(this.state.LongpressToggle, 'UUUUU');
     this.setState({ LongpressToggle: userState });
+    this.setState({ starmessage: message });
   };
 
   updateMembersCount = (item, count) => {
@@ -204,17 +232,21 @@ class CometChatMessages extends React.PureComponent {
     params.actionGenerated('membersUpdated', item, count);
   };
 
-  starMessages = (message) => {
+  starMessages = () => {
+    // this.setState({ ...this.state.starmessage, star: true });
+    // console.log(this.state.starmessage, '&&&&&&&&&&');
+
     CometChat.callExtension('save-message', 'POST', 'v1/save', {
-      msgId:message.id,
+      msgId: this.state.starmessage.id,
     })
       .then((response) => {
         // { success: true }
-        console.log(response,'1112222112211');
+        console.log(response, '1112222112211');
+        this.setState({ LongpressToggle: false });
       })
       .catch((error) => {
         // Error occured
-        console.log(error,'*************');
+        console.log(error, '*************');
       });
   };
 
@@ -964,6 +996,197 @@ class CometChatMessages extends React.PureComponent {
     return conversationId;
   };
 
+  getforwardList = (state) => {
+    this.setState({ forwardMessageView: state });
+    this.setState({ LongpressToggle: false });
+    var limit = 30;
+    var usersRequest = new CometChat.UsersRequestBuilder()
+      .setLimit(limit)
+      .build();
+
+    usersRequest.fetchNext().then(
+      (userList) => {
+        this.setState({ users: userList });
+      },
+      (error) => {
+        console.log('User list fetching failed with error:', error);
+      },
+    );
+  };
+
+  loader = (value) => {
+    this.setState({
+      selected: value,
+    });
+  };
+
+  func = () => {
+    this.state.selectedMessages.map((items) => {
+      console.log(this.state.starmessage.data.file, 'IIIIIIIIII');
+      if (this.state.starmessage.type === 'text') {
+        const textMessage = new CometChat.TextMessage(
+          items.item.uid,
+          this.state.starmessage.text,
+          'user',
+        );
+        // console.log(textMessage, '99999999');
+        CometChat.sendMessage(textMessage)
+          .then((message) => {
+            // const newMessageObj = { ...message, _id: textMessage._id };
+            // this.setState({ messageInput: '' });
+            // this.messageInputRef.current.textContent = '';
+            // this.playAudio();
+            // this.props.actionGenerated(actions.MESSAGE_SENT, newMessageObj);
+            console.log(message, 'UUUUU');
+            navigation.navigate('Users');
+          })
+          .catch((error) => {
+            const newMessageObj = { ...textMessage, error: error };
+            this.props.actionGenerated(
+              actions.ERROR_IN_SEND_MESSAGE,
+              newMessageObj,
+            );
+            logger('Message sending failed with error:', error);
+            const errorCode = error?.message || 'ERROR';
+            this.props?.showMessage('error', errorCode);
+          });
+      } else if (this.state.starmessage.type === 'image') {
+        const mediaMessage = new CometChat.MediaMessage(
+          items.item.uid,
+          this.state.starmessage.data.file,
+          this.state.starmessage.type,
+          'user',
+        );
+        // console.log(mediaMessage, 'LLLLL');
+        mediaMessage.setReceiver('user');
+        mediaMessage.setConversationId(this.state.starmessage.conversationId);
+        mediaMessage.setType(this.state.starmessage.data.type);
+        mediaMessage._composedAt = Date.now();
+        mediaMessage._id = '_' + Math.random().toString(36).substr(2, 9);
+        mediaMessage.setId(mediaMessage._id);
+        mediaMessage.setData({
+          type: this.state.starmessage.data.file.type,
+          category: CometChat.CATEGORY_MESSAGE,
+          name: this.state.starmessage.data.file.name,
+          file: this.state.starmessage.data.file,
+          url: this.state.starmessage.data.file.uri,
+          sender: this.loggedInUser,
+        });
+
+        CometChat.sendMessage(mediaMessage)
+          .then(async (response) => {
+            console.log(response, 'KKKKKKKK');
+
+            // this.setState({ sendtoggle: true });
+
+            // if (this.state.sendtoggle === false) {
+            //   this.loader();
+            // } else {
+            //   this.props.navigation.navigate('Chat');
+            // }
+
+            // this.playAudio();
+
+            // const newMessageObj = {
+            //   ...response,
+            //   _id: mediaMessage._id,
+            //   localFile: messageInput,
+            // };
+            // this.props.actionGenerated(actions.MESSAGE_SENT, newMessageObj);
+          })
+          .catch((error) => {
+            const newMessageObj = { ...mediaMessage, error: error };
+            const errorCode = error?.message || 'ERROR';
+            this.props.actionGenerated(
+              actions.ERROR_IN_SEND_MESSAGE,
+              newMessageObj,
+            );
+            this.props?.showMessage('error', errorCode);
+            logger('Message sending failed with error: ', error);
+          });
+
+        // console.log(mediaMessage, 'MMM');
+      }
+    });
+  };
+
+  renderItem = (items) => {
+    // console.log(items.item.uid,'dfef');
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.setState({
+            selectedMessages: [...this.state.selectedMessages, items],
+          });
+          // this.setState({ selected: !this.state.selected });
+          this.loader(items.item.uid);
+        }}>
+        <View style={style.userContainer}>
+          <View style={style.userProfile}>
+            {items.item.avatar ? (
+              <Image
+                style={{ height: 50, width: 50, borderRadius: 50 }}
+                source={{
+                  uri: items.item.avatar,
+                }}
+              />
+            ) : (
+              <Image
+                style={{ height: 50, width: 50, borderRadius: 50 }}
+                source={require('../../../../../../../assets/images/dummy.png')}
+              />
+            )}
+            {this.state.selected ? (
+              <View
+                style={{
+                  backgroundColor: '#246BFD',
+                  height: 20,
+                  width: 20,
+                  borderRadius: 50,
+                  marginLeft: 30,
+                  marginTop: -15,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  name="check"
+                  size={16}
+                  color="#FFF"
+                  style={{ fontWeight: '700' }}
+                />
+              </View>
+            ) : (
+              <View></View>
+            )}
+          </View>
+          <View style={style.userName}>
+            <Text style={style.userNameText}>{items.item.name}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      // onPress={() => {
+      //   this.setState({
+      //     selectedMessages: [...this.state.selectedMessages, items],
+      //   });
+      // this.state.selectedMessages.push(items),///change
+      // this.setState((prev)=>{
+      //   ...prev,
+      //   selectedMessages:[...prev]
+
+      // })
+      // this.setState({ selected: !this.state.selected });
+      // }}>
+
+      // <CometChatUserListItem
+      //     // theme={this.theme}
+      //     user={users}
+      //     // selectedUser={this.state.selectedUser}
+      //     // clickHandler={this.handleClick}
+      //   />
+    );
+  };
+
   render() {
     const { route } = this.props;
     const params = route?.params || this.props;
@@ -1072,12 +1295,74 @@ class CometChatMessages extends React.PureComponent {
         </View>
       </Modal>
     );
-    //  console.log(params.messageconfig,'oooooooo');
+    // console.log(this.state.users,'oooooooo');
+
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}>
+          <Modal
+            // animated
+            animationType="fade"
+            visible={this.state.forwardMessageView}>
+            <View style={style.header}>
+              <View style={style.container}>
+                <View style={style.Icon_Container}>
+                  <TouchableOpacity
+                    onPress={
+                      () => this.setState({ forwardMessageView: false })
+                      // this.props.navigation.navigate('Go back')
+                    }>
+                    <Antdesign name="arrowleft" size={24} color="#FFF" />
+                  </TouchableOpacity>
+                </View>
+                <View style={style.heading_Container}>
+                  <Text style={style.heading_text}>Forward to...</Text>
+                </View>
+              </View>
+            </View>
+            <View style={style.content}>
+              <FlatList
+                data={this.state.users}
+                renderItem={this.renderItem}
+                keyExtractor={(item) => item.id}
+              />
+            </View>
+            <View style={style.groupButtonContainer}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#246BFD',
+                  height: 60,
+                  width: 60,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 50,
+                  marginBottom: 280,
+                  marginLeft: 270,
+                }}
+                // style={[
+                //   style.groupButtonWrapper,
+                //   {
+                //     backgroundColor: '#246BFD',
+                //   },
+                // ]}
+                onPress={() => {
+                  // console.log(this.state.selectedMessages, 'RREERREE')
+                  this.func()
+                }}>
+                {/* <Text
+                    style={[
+                      style.btnText,
+                      // { color: this.theme.color.white },
+                      { color: '#FFF' },
+                    ]}>
+                    Create
+                  </Text> */}
+                <Icon name="send" size={28} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </Modal>
           <SafeAreaView style={style.chatWrapperStyle}>
             {imageView}
             {this.state.showProfile ? (
@@ -1150,7 +1435,10 @@ class CometChatMessages extends React.PureComponent {
               loggedInUser={params.loggedInUser}
               actionGenerated={this.actionHandler}
               navigation={this.props.navigation}
+              messagefunction={this.messageFunction}
               LongpressToggle={this.state.LongpressToggle}
+              starMessages={this.starMessages}
+              getforwardList={this.getforwardList}
             />
             <CometChatMessageList
               theme={this.theme}

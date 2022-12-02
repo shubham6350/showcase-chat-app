@@ -389,6 +389,8 @@ class CometChatUserListWithMessages extends React.Component {
         />
       );
     }
+
+    // console.log(this.state.item,'yasdajshdbshkjcbshjvbsdkhjvbdshj');
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
         <View style={{ backgroundColor: 'white' }}>
