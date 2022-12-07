@@ -1101,22 +1101,26 @@ class CometChatMessages extends React.PureComponent {
               this.props?.showMessage('error', errorCode);
             });
         } else if (this.state.starmessage.type === 'image') {
-          console.log(this.state.starmessage.data.file.type, 'KKK');
+          console.log(this.state.starmessage.type, 'KKK');
           const mediaMessage = new CometChat.MediaMessage(
-            items.conversationWith.uid,
+            items.conversationType === 'user'
+              ? items.conversationWith.uid
+              : items.conversationWith.guid,
             this.state.starmessage.data.file,
-            this.state.starmessage.type,
-            items.conversationType,
+            this.state.starmessage.data.type,
+            items.conversationType === 'user' ? 'user' : 'group',
           );
 
-          mediaMessage.setReceiver(items.conversationType);
+          mediaMessage.setReceiver(
+            items.conversationType === 'user' ? 'user' : 'group',
+          );
           mediaMessage.setConversationId(this.state.starmessage.conversationId);
           mediaMessage.setType(this.state.starmessage.type);
           mediaMessage._composedAt = Date.now();
           mediaMessage._id = '_' + Math.random().toString(36).substr(2, 9);
           mediaMessage.setId(mediaMessage._id);
           mediaMessage.setData({
-            type: this.state.starmessage.data.file.type,
+            type: this.state.starmessage.type,
             category: CometChat.CATEGORY_MESSAGE,
             name: this.state.starmessage.data.file.name,
             file: this.state.starmessage.data.file,
