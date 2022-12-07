@@ -711,6 +711,7 @@ class CometChatMessageList extends React.PureComponent {
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
               starMessages={this.props.starMessages}
+              messageFunction={this.props.messagefunction}
             />
           ) : null;
           break;
@@ -727,6 +728,7 @@ class CometChatMessageList extends React.PureComponent {
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
               starMessages={this.props.starMessages}
+              messageFunction={this.props.messagefunction}
             />
           ) : null;
           break;
@@ -743,6 +745,7 @@ class CometChatMessageList extends React.PureComponent {
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
               starMessages={this.props.starMessages}
+              messageFunction={this.props.messagefunction}
             />
           ) : null;
           break;
@@ -805,6 +808,7 @@ class CometChatMessageList extends React.PureComponent {
               actionGenerated={this.props.actionGenerated}
               showMessage={this.props?.showMessage}
               starMessages={this.props.starMessages}
+              messageFunction={this.props.messagefunction}
             />
           ) : null;
           break;

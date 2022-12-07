@@ -73,11 +73,11 @@ const CometChatSenderImageMessageBubble = (props) => {
         <TouchableOpacity
           onPress={() => open()}
           style={style.messageImgWrapperStyle}
-          onLongPress={() =>
-            // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
+          onLongPress={() => {
+            props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message);
             // props.starMessages(message)
-            props.messageFunction(true,message)
-          }>
+            props.messageFunction(true, message);
+          }}>
           <FastImage
             defaultSource={{
               uri: message?.localFile?.url,

@@ -17,6 +17,7 @@ export default StyleSheet.create({
     aspectRatio: 1,
     width: '100%',
     height: undefined,
+    borderRadius:50,
   },
 
   groupDetailContainer: {

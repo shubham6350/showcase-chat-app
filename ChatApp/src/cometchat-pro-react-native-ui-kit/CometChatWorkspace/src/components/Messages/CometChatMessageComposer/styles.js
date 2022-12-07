@@ -4,16 +4,20 @@ import theme from '../../../resources/theme';
 import { COLORS } from '../../../../../../../assets/colors/colors';
 
 export default StyleSheet.create({
-  bottomSheetContainer: { flex: 1,padding: 20,marginBottom: -80 },
+  bottomSheetContainer: { flex: 1, padding: 20, marginBottom: -80 },
   mainContainer: { flexDirection: 'row', padding: 10, alignItems: 'center' },
   plusCircleContainer: { marginRight: 10, marginLeft: 10 },
-  plusCircleContainerr: {padding: 10,backgroundColor: COLORS.ALERT_INFO ,borderRadius: 50},
+  plusCircleContainerr: {
+    padding: 10,
+    backgroundColor: COLORS.ALERT_INFO,
+    borderRadius: 50,
+  },
   textInputContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  fullFlex: { flex: 1},
+  fullFlex: { flex: 1 },
   chatComposerStyle: {
     padding: 14,
     backgroundColor: theme.backgroundColor.white,
@@ -110,5 +114,12 @@ export default StyleSheet.create({
   previewTextStyle: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  ImageuploadContainer: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
   },
 });

@@ -14,7 +14,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   Image,
-  Vibration
+  Vibration,
 } from 'react-native';
 import * as consts from '../../../utils/consts';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -71,6 +71,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       snapPoints: null,
       keyboardActivity: false,
       restrictions: null,
+      Loader: false,
     };
     Sound.setCategory('Ambient', true);
     this.audio = new Sound(outgoingMessageAlert);
@@ -160,7 +161,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
    */
   playAudio = () => {
     this.audio.setCurrentTime(0);
-    this.audio.play(()=>{});
+    this.audio.play(() => {});
   };
 
   /**
@@ -200,11 +201,11 @@ export default class CometChatMessageComposer extends React.PureComponent {
    */
 
   sendMediaMessage = (messageInput, messageType) => {
-    // console.log(messageInput,'WWWWWW');
+    console.log(messageInput['name'], 'WWWWWW');
     try {
-
       const { receiverId, receiverType } = this.getReceiverDetails();
       const conversationId = this.props.getConversationId();
+      // console.log(receiverType);
       const mediaMessage = new CometChat.MediaMessage(
         receiverId,
         messageInput,
@@ -222,7 +223,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       mediaMessage.setType(messageType);
       mediaMessage._composedAt = Date.now();
       mediaMessage._id = '_' + Math.random().toString(36).substr(2, 9);
-      mediaMessage.setId(mediaMessage._id)
+      mediaMessage.setId(mediaMessage._id);
       mediaMessage.setData({
         type: messageType,
         category: CometChat.CATEGORY_MESSAGE,
@@ -241,6 +242,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
             _id: mediaMessage._id,
             localFile: messageInput,
           };
+
           this.props.actionGenerated(actions.MESSAGE_SENT, newMessageObj);
         })
         .catch((error) => {
@@ -298,7 +300,7 @@ export default class CometChatMessageComposer extends React.PureComponent {
       textMessage.setConversationId(conversationId);
       textMessage._composedAt = Date.now();
       textMessage._id = '_' + Math.random().toString(36).substr(2, 9);
-      textMessage.setId(textMessage._id)
+      textMessage.setId(textMessage._id);
       this.props.actionGenerated(actions.MESSAGE_COMPOSED, [textMessage]);
       this.setState({ messageInput: '', replyPreview: false });
 
@@ -495,7 +497,6 @@ export default class CometChatMessageComposer extends React.PureComponent {
    * @param stickerMessage: object stickerMessage
    */
   sendSticker = (stickerMessage) => {
-
     const { receiverId, receiverType } = this.getReceiverDetails();
 
     const customData = {
@@ -627,7 +628,6 @@ export default class CometChatMessageComposer extends React.PureComponent {
       }
     }
   };
-  
 
   takePhoto = async (mediaType = 'photo') => {
     try {
@@ -661,7 +661,10 @@ export default class CometChatMessageComposer extends React.PureComponent {
             }
             let type = null;
             let name = null;
-            if (Platform.OS === 'ios' && response.assets[0].fileName !== undefined) {
+            if (
+              Platform.OS === 'ios' &&
+              response.assets[0].fileName !== undefined
+            ) {
               name = response.assets[0].fileName;
               type = response.assets[0].type;
             } else {
@@ -746,61 +749,85 @@ export default class CometChatMessageComposer extends React.PureComponent {
     );
 
     let inputVal = (
-      <View style={{height: 50,flexDirection: 'row',alignItems: 'center',marginBottom: 10}}>
-      <View style={{width: '86%' ,height: 50,backgroundColor: '#FAFAFA', borderRadius: 10, marginRight: 10, flexDirection: 'row',alignItems: 'center',paddingHorizontal: 10, paddingVertical: 15}}>
-      <TouchableOpacity
-        style={style.plusCircleContainer}
-        disabled={disabled}
-        onPress={() => {
-          //  this.setState({ composerActionsVisible: true });
-          this.toggleStickerPicker();
+      <View
+        style={{
+          height: 50,
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginBottom: 10,
         }}>
-        <Feather size={20} name="smile" color="rgba(0,0,0,0.35)" />
-      </TouchableOpacity>
-      <TextInput
-        style={style.messageInputStyle}
-        editable={!disabled}
-        value={this.state.messageInput}
-        placeholder="Type a Message..."
-        onChangeText={(text) => this.changeHandler(text)}
-        onSubmitEditing={() => {
-          return this.sendTextMessage();
-        }}
-        onBlur={this.endTyping}
-        ref={this.messageInputRef}
-      />
-      <TouchableOpacity
-        style={style.plusCircleContainer}
-        disabled={disabled}
-        onPress={() => {this.setState({ composerActionsVisible: true });}}>
-        <Entypo size={20} name="attachment" color="rgba(0,0,0,0.35)" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={style.plusCircleContainer}
-        disabled={disabled}
-        onPress={() => this.takePhoto()}>
-        <Entypo size={20} name="camera" color="rgba(0,0,0,0.35)" />
-      </TouchableOpacity>
-      </View>
-      <View>
-      {/* <Text>T</Text> */}
-        {this.state.messageInput.length > 0 ? 
-      <TouchableOpacity
-      style={style.plusCircleContainerr}
-      disabled={disabled}
-      onPress={() => this.sendTextMessage()}>
-        <MaterialCommunityIcons size={20} name="send" color="white" />
-      </TouchableOpacity>
-      :
-      <TouchableOpacity
-      style={style.plusCircleContainerr}
-      disabled={disabled}
-      onPress={() => {
-          this.setState({ composerActionsVisible: true });
-      }}>
-        <MaterialCommunityIcons size={20} name="microphone" color="white" />
-      </TouchableOpacity> }
-      </View>
+        <View
+          style={{
+            width: '86%',
+            height: 50,
+            backgroundColor: '#FAFAFA',
+            borderRadius: 10,
+            marginRight: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 10,
+            paddingVertical: 15,
+          }}>
+          <TouchableOpacity
+            style={style.plusCircleContainer}
+            disabled={disabled}
+            onPress={() => {
+              //  this.setState({ composerActionsVisible: true });
+              this.toggleStickerPicker();
+            }}>
+            <Feather size={20} name="smile" color="rgba(0,0,0,0.35)" />
+          </TouchableOpacity>
+          <TextInput
+            style={style.messageInputStyle}
+            editable={!disabled}
+            value={this.state.messageInput}
+            placeholder="Type a Message..."
+            onChangeText={(text) => this.changeHandler(text)}
+            onSubmitEditing={() => {
+              return this.sendTextMessage();
+            }}
+            onBlur={this.endTyping}
+            ref={this.messageInputRef}
+          />
+          <TouchableOpacity
+            style={style.plusCircleContainer}
+            disabled={disabled}
+            onPress={() => {
+              this.setState({ composerActionsVisible: true });
+            }}>
+            <Entypo size={20} name="attachment" color="rgba(0,0,0,0.35)" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={style.plusCircleContainer}
+            disabled={disabled}
+            onPress={() => this.takePhoto()}>
+            <Entypo size={20} name="camera" color="rgba(0,0,0,0.35)" />
+          </TouchableOpacity>
+        </View>
+        <View>
+          {/* <Text>T</Text> */}
+          {this.state.messageInput.length > 0 ? (
+            <TouchableOpacity
+              style={style.plusCircleContainerr}
+              disabled={disabled}
+              onPress={() => this.sendTextMessage()}>
+              <MaterialCommunityIcons size={20} name="send" color="white" />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={style.plusCircleContainerr}
+              disabled={disabled}
+              onPress={() => {
+                this.setState({ composerActionsVisible: true });
+              }}>
+              <MaterialCommunityIcons
+                size={20}
+                name="microphone"
+                color="white"
+              />
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     );
 
@@ -961,34 +988,34 @@ export default class CometChatMessageComposer extends React.PureComponent {
       />
     );
     return (
-      <View
-        style={
-          Platform.OS === 'android' && this.state.keyboardActivity
-            ? {
-                marginBottom: 21 * heightRatio,
-                elevation: 5,
-                backgroundColor: '#fff',
-              }
-            : { elevation: 5, backgroundColor: '#fff' }
-        }>
-        {blockedPreview}
-        {editPreview}
-        {createPoll}
-        {stickerViewer}
-        {smartReplyPreview}
-        <ComposerActions
-          visible={this.state.composerActionsVisible}
-          close={() => {
-            this.setState({ composerActionsVisible: false });
-          }}
-          toggleStickers={this.toggleStickerPicker}
-          toggleCreatePoll={this.toggleCreatePoll}
-          sendMediaMessage={this.sendMediaMessage}
-        />
-        <View style={style.mainContainer}>
-          {inputVal}
+      <>
+        <View
+          style={
+            Platform.OS === 'android' && this.state.keyboardActivity
+              ? {
+                  marginBottom: 21 * heightRatio,
+                  elevation: 5,
+                  backgroundColor: '#fff',
+                }
+              : { elevation: 5, backgroundColor: '#fff' }
+          }>
+          {blockedPreview}
+          {editPreview}
+          {createPoll}
+          {stickerViewer}
+          {smartReplyPreview}
+          <ComposerActions
+            visible={this.state.composerActionsVisible}
+            close={() => {
+              this.setState({ composerActionsVisible: false });
+            }}
+            toggleStickers={this.toggleStickerPicker}
+            toggleCreatePoll={this.toggleCreatePoll}
+            sendMediaMessage={this.sendMediaMessage}
+          />
+          <View style={style.mainContainer}>{inputVal}</View>
         </View>
-      </View>
+      </>
     );
   }
 }

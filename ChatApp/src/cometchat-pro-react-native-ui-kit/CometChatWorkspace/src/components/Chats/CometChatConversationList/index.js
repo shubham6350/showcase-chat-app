@@ -872,7 +872,7 @@ class CometChatConversationList extends React.Component {
     let tags = ['archivedChat'];
     CometChat.tagConversation(i.uid, j, tags).then(
       (conversation) => {
-        console.log('conversation', conversation);
+        // console.log('conversation', conversation);
       },
       (error) => {
         console.log('error while fetching a conversation', error);
@@ -1095,6 +1095,7 @@ class CometChatConversationList extends React.Component {
   };
 
   render() {
+    // console.log(this.state.conversationList,'LIstIIII');
     return (
       <CometChatContextProvider ref={(el) => (this.contextProviderRef = el)}>
         {this.state.conversationList.length > 0 ? (

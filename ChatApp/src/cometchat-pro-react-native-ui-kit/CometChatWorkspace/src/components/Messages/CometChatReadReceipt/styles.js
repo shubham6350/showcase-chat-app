@@ -4,6 +4,7 @@ export default StyleSheet.create({
   containerStyle: {
     flexDirection: 'row',
     marginTop: 5,
+    // backgroundColor: 'green',
   },
   msgTimestampStyle: {
     fontSize: 11,

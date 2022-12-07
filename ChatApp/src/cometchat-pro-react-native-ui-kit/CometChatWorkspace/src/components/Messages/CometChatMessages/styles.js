@@ -31,8 +31,7 @@ export default StyleSheet.create({
     height: '9%',
     backgroundColor: '#246BFD',
     justifyContent: 'center',
-    marginTop:50,
-
+    marginTop: 50,
   },
   container: {
     // backgroundColor: 'yellow',
@@ -77,6 +76,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     borderRadius: 10,
+    padding: 10,
   },
   userProfile: {
     height: 50,
@@ -86,9 +86,10 @@ export default StyleSheet.create({
     borderRadius: 0,
   },
   userName: {
-    width: '80%',
+    width: '60%',
     height: 40,
     justifyContent: 'center',
+
     // backgroundColor: 'yellow',
   },
   userNameText: {
@@ -99,5 +100,15 @@ export default StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  ImageuploadContainer: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
+  },
+  ImageLoaderConatiner: {
+    
   },
 });
