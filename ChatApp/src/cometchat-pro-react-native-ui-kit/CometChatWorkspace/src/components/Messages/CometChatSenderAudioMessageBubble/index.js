@@ -17,7 +17,8 @@ const CometChatSenderAudioMessageBubble = (props) => {
       <View style={style.innerContainer}>
         <TouchableWithoutFeedback
           onLongPress={() =>
-            props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
+            // props.actionGenerated(actions.OPEN_MESSAGE_ACTIONS, message)
+            props.messageFunction(true, message)
           }>
           <View
             style={[

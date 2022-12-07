@@ -1079,16 +1079,8 @@ class CometChatMessages extends React.PureComponent {
           CometChat.sendMessage(textMessage)
             .then((message) => {
               this.setState({ forwardMessageView: false }, () => {
-                console.log('1');
                 this.props.navigation.navigate('Chat');
               });
-
-              // const newMessageObj = { ...message, _id: textMessage._id };
-              // this.setState({ messageInput: '' });
-              // this.messageInputRef.current.textContent = '';
-              // this.playAudio();
-              // this.props.actionGenerated(actions.MESSAGE_SENT, newMessageObj);
-              console.log(message, 'UUUUU');
             })
             .catch((error) => {
               const newMessageObj = { ...textMessage, error: error };
@@ -1100,79 +1092,56 @@ class CometChatMessages extends React.PureComponent {
               const errorCode = error?.message || 'ERROR';
               this.props?.showMessage('error', errorCode);
             });
-        } else if (this.state.starmessage.type === 'image') {
-          console.log(this.state.starmessage.type, 'KKK');
-          const mediaMessage = new CometChat.MediaMessage(
+        } else if (
+          this.state.starmessage.type === 'image' ||
+          'audio' ||
+          'video'
+        ) {
+          let receiverID =
             items.conversationType === 'user'
               ? items.conversationWith.uid
-              : items.conversationWith.guid,
-            this.state.starmessage.data.file,
-            this.state.starmessage.data.type,
-            items.conversationType === 'user' ? 'user' : 'group',
+              : items.conversationWith.guid;
+          let messageType = this.state.starmessage.type;
+          let receiverType = items.conversationType;
+          let mediaMessage = new CometChat.MediaMessage(
+            receiverID,
+            '',
+            messageType,
+            receiverType,
           );
-
-          mediaMessage.setReceiver(
-            items.conversationType === 'user' ? 'user' : 'group',
-          );
+          let file = {
+            name: this.state.starmessage.data.attachments[0].name,
+            extension: this.state.starmessage.data.attachments[0].extension,
+            mimeType: this.state.starmessage.data.attachments[0].mimeType,
+            url: this.state.starmessage.data.attachments[0].url,
+          };
+          let attachment = new CometChat.Attachment(file);
+          mediaMessage.setReceiver(items.conversationType);
           mediaMessage.setConversationId(this.state.starmessage.conversationId);
           mediaMessage.setType(this.state.starmessage.type);
           mediaMessage._composedAt = Date.now();
           mediaMessage._id = '_' + Math.random().toString(36).substr(2, 9);
           mediaMessage.setId(mediaMessage._id);
           mediaMessage.setData({
-            type: this.state.starmessage.type,
+            type: this.state.starmessage.data.attachments[0].mimeType,
             category: CometChat.CATEGORY_MESSAGE,
-            name: this.state.starmessage.data.file.name,
-            file: this.state.starmessage.data.file,
-            url: this.state.starmessage.data.file.uri,
+            name: this.state.starmessage.data.attachments[0].name,
+            file: file,
+            url: this.state.starmessage.data.attachments[0].url,
             sender: this.loggedInUser,
           });
-          // this.actionGenerated(actions.MESSAGE_COMPOSED, [mediaMessage]);
-
-          CometChat.sendMessage(mediaMessage)
-            .then((response) => {
-              console.log(response, 'success');
-
-              const newMessageObj = {
-                ...response,
-                _id: mediaMessage._id,
-                localFile: this.state.starmessage.data.file,
-              };
-              console.log(newMessageObj, 'LLLLL');
-              this.actionHandler(actions.MESSAGE_SENT, newMessageObj);
+          mediaMessage.setAttachment(attachment);
+          CometChat.sendMediaMessage(mediaMessage).then(
+            (mediaMessage) => {
+              console.log('message sent', mediaMessage);
               this.setState({ forwardMessageView: false }, () => {
-                console.log('12244546');
                 this.props.navigation.navigate('Chat');
               });
-              // this.props.navigation.navigate('Chat');
-
-              // this.setState({ sendtoggle: true });
-
-              // if (this.state.sendtoggle === false) {
-              //   this.loader();
-              // } else {
-              // this.props.navigation.navigate('Chat');
-              // }
-
-              // this.playAudio();
-
-              // const newMessageObj = {
-              //   ...response,
-              //   _id: mediaMessage._id,
-              //   localFile: messageInput,
-              // };
-              // this.props.actionGenerated(actions.MESSAGE_SENT, newMessageObj);
-            })
-            .catch((error) => {
-              const newMessageObj = { ...mediaMessage, error: error };
-              const errorCode = error?.message || 'ERROR';
-              this.props.actionGenerated(
-                actions.ERROR_IN_SEND_MESSAGE,
-                newMessageObj,
-              );
-              this.props?.showMessage('error', errorCode);
-              logger('Message sending failed with error: ', error);
-            });
+            },
+            (error) => {
+              console.log('error in sending message', error);
+            },
+          );
         }
       }
     });
