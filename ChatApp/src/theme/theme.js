@@ -1,0 +1,87 @@
+// export const COLORS = {
+//   MAIN_PRIMARY: '#246BFD',
+//   MAIN_SECONDARY: '#FFD300',
+
+//   ALERT_SUCCESS: '#4ADE80',
+//   ALERT_INFO: '#246BFD',
+//   ALERT_WARNING: '#FACC15',
+//   ALERT_ERROR: '#F75555',
+//   ALERT_DISABLED: '#D8D8D8',
+//   ALERT_DISABLED_BUTTON: '#3062C8',
+
+//   GREYSCALE_900: '#212121',
+//   GREYSCALE_800: '#424242',
+//   GREYSCALE_700: '#616161',
+//   GREYSCALE_600: '#757575',
+//   GREYSCALE_500: '#9E9E9E',
+//   GREYSCALE_400: '#BDBDBD',
+//   GREYSCALE_300: '#E0E0E0',
+//   GREYSCALE_200: '#EEEEEE',
+//   GREYSCALE_100: '#F5F5F5',
+//   GREYSCALE_50: '#FAFAFA',
+
+//   // GRADIENT_BLUE: linear-gradient(286.17deg, #246BFD 0%, #5089FF 100%),
+//   // GRADIENT_YELLOW: linear-gradient(286.17deg, #FACC15 0%, #FFE580 100%),
+//   // GRADIENT_GREEN: linear-gradient(286.17deg, #22BB9C 0%, #35DEBC 100%),
+//   // GRADIENT_ORANGE: linear-gradient(286.17deg, #FB9400 0%, #FFAB38 100%),
+//   // GRADIENT_RED: linear-gradient(286.17deg, #FF4D67 0%, #FF8A9B 100%),
+
+//   DARK_1: '#181A20',
+//   DARK_2: '#1F222A',
+//   DARK_3: '#35383F',
+
+//   COLOR_WHITE: '#FFFFFF',
+//   COLOR_BLACK: '#000000',
+//   COLOR_RED: '#F44336',
+//   COLOR_PINK: '#E91E63',
+//   COLOR_PURPLE: '#9C27BC',
+//   COLOR_DEEP_PURPLE: '#673AB7',
+//   COLOR_INDIGO: '#3F51B5',
+//   COLOR_BLUE: '#2196F3',
+//   COLOR_LIGHT_BLUE: '#03A9F4',
+//   COLOR_CYAN: '#00BCD4',
+//   COLOR_TEAL: '#009688',
+//   COLOR_GREEN: '#4CAF50',
+//   COLOR_LIGHT_GREEN: '#8BC34A',
+//   COLOR_LIME: '#CDDC39',
+//   COLOR_YELLOW: '#FFEB3E',
+//   COLOR_AMBER: '#FFC107',
+//   COLOR_ORANGE: '#FF9800',
+//   COLOR_DEEP_ORANGE: '#FF5722',
+//   COLOR_BROWN: '#795548',
+//   COLOR_BLUE_GREY: '#607D8E',
+
+//   BACKGROUND_BLUE: '#EEF4FF',
+//   BACKGROUND_GREEN: '#F2FFFC',
+//   BACKGROUND_ORANGE: '#FFF8ED',
+//   BACKGROUND_PINK: '#FFF5F5',
+//   BACKGROUND_YELLOW: '#FFFEE0',
+//   BACKGROUND_PURPLE: '#FCF4FF',
+
+//   TRANSPARENT_BLUE: '#246BFD',
+//   TRANSPARENT_ORANGE: '#FF9800',
+//   TRANSPARENT_YELLOW: '#FACC15',
+//   TRANSPARENT_RED: '#F75555',
+//   TRANSPARENT_GREEN: '#4CAF50',
+//   TRANSPARENT_PURPLE: '#9C27B0',
+//   TRANSPARENT_CYAN: '#00BCD4',
+// };
+
+const themee = {
+  light: {
+    theme: 'light',
+    color: 'black',
+    background: '#fff',
+    backgroundl: '#FAFAFA',
+    background1: '#E4E8EA',
+  },
+  dark: {
+    theme: 'dark',
+    color: 'white',
+    background: '#181A20',
+    backgroundl: '#35383F',
+    background1: '#424242',
+  },
+};
+
+export default themee;

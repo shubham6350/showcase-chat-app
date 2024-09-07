@@ -32,5 +32,10 @@
 	<string>1:993010448494:ios:fc6201ca702595982d4e7f</string>
 	<key>DATABASE_URL</key>
 	<string>https://chatapp-7faa8-default-rtdb.firebaseio.com</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
+	<!-- optionally, if you want to record audio: -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs access to your Microphone.</string>
 </dict>
 </plist>

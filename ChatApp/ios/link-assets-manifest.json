@@ -2,6 +2,22 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "assets/fonts/DancingScript-VariableFont_wght.ttf",
+      "sha1": "f6ef1641594430e8367d9c26819a900c879b8f35"
+    },
+    {
+      "path": "assets/fonts/Inspiration-Regular.ttf",
+      "sha1": "79aee5918862a808e708ed47c918606bfe65bd7a"
+    },
+    {
+      "path": "assets/fonts/Pacifico-Regular.ttf",
+      "sha1": "baca1fca7fe74b61cb33aa0da48ec1a3a77bcf49"
+    },
+    {
+      "path": "assets/fonts/RubikVinyl-Regular.ttf",
+      "sha1": "46da720f71d14815846c71bf5d0044d14810680b"
+    },
+    {
       "path": "assets/fonts/Urbanist-Bold.ttf",
       "sha1": "4b1d8478efaf85885d9a28dc7ce3bf284954ad74"
     },
